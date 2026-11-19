@@ -1,0 +1,86 @@
+[
+  {
+    "id": "MOB01",
+    "profile": "phone",
+    "screen": "480x800",
+    "name": "Launch and initial catalog",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB02",
+    "profile": "phone",
+    "screen": "480x800",
+    "name": "Case insensitive search",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB03",
+    "profile": "phone",
+    "screen": "480x800",
+    "name": "Open and close vacancy details",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB04",
+    "profile": "phone",
+    "screen": "480x800",
+    "name": "Search state survives rotation",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB05",
+    "profile": "phone",
+    "screen": "480x800",
+    "name": "Empty search result",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB06",
+    "profile": "phone",
+    "screen": "480x800",
+    "name": "Reset restores catalog",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB01",
+    "profile": "tablet",
+    "screen": "800x1280",
+    "name": "Launch and initial catalog",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB02",
+    "profile": "tablet",
+    "screen": "800x1280",
+    "name": "Case insensitive search",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB03",
+    "profile": "tablet",
+    "screen": "800x1280",
+    "name": "Open and close vacancy details",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB04",
+    "profile": "tablet",
+    "screen": "800x1280",
+    "name": "Search state survives rotation",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB05",
+    "profile": "tablet",
+    "screen": "800x1280",
+    "name": "Empty search result",
+    "status": "PASS"
+  },
+  {
+    "id": "MOB06",
+    "profile": "tablet",
+    "screen": "800x1280",
+    "name": "Reset restores catalog",
+    "status": "PASS"
+  }
+]

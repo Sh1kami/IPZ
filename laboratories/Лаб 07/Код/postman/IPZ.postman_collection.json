@@ -1,0 +1,313 @@
+{
+  "info": {
+    "name": "IPZ API — Panchyshkin Bohdan 3PRs/3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://panchyshkin-ipz-app:18727"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get('run_email')) pm.collectionVariables.set('run_email', 'newman-' + pm.variables.replaceIn('{{$guid}}') + '@example.test');"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });",
+              "pm.test('Healthy', () => pm.expect(pm.response.json().status).to.eql('ok'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/jobs"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });",
+              "pm.test('Count equals list size', () => { const d=pm.response.json(); pm.expect(d.count).to.eql(d.jobs.length); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Anonymous profile",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/me"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Register seeker",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"Богдан Панчишкін\", \"email\": \"{{run_email}}\", \"password\": \"TestPass26!\", \"role\": \"SEEKER\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"{{run_email}}\", \"password\": \"TestPass26!\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authenticated profile",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/me"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });",
+              "pm.test('Own email', () => pm.expect(pm.response.json().user.email).to.eql(pm.collectionVariables.get('run_email')));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Missing resume",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/me/resume"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', function () { pm.response.to.have.status(404); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Save resume",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/me/resume",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"QA Engineer\", \"text\": \"Досвід тестування програмного забезпечення з Java та API.\", \"skills\": \"JUnit, Postman\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Apply",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/jobs/1/applications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"coverLetter\": \"Тестовий відгук із Postman.\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Duplicate application",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/jobs/1/applications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"coverLetter\": \"Повторний відгук.\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', function () { pm.response.to.have.status(409); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{base_url}}/api/auth/logout"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Session ended",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/me"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+              "pm.test('JSON response', function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JobFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ІПЗ Якість і тестування програмного забезпечення</a> &gt; <a href="index.source.html" class="el_package">ua.edu.kntu.jobs</a> &gt; <span class="el_source">JobFilter.java</span></div><h1>JobFilter.java</h1><pre class="source lang-java linenums">package ua.edu.kntu.jobs;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import ua.edu.kntu.jobs.Models.Job;
+
+/** Pure domain search. Unicode case normalization does not depend on SQLite ASCII LIKE. */
+public record JobFilter(String query, String city, int minSalary, Boolean remote, String status) {
+<span class="fc" id="L10">    public JobFilter {</span>
+<span class="fc bfc" id="L11" title="All 2 branches covered.">        query = Validation.text(query == null ? &quot;&quot; : query, &quot;query&quot;, 0, 200).toLowerCase(Locale.ROOT);</span>
+<span class="fc bfc" id="L12" title="All 2 branches covered.">        city = Validation.text(city == null ? &quot;&quot; : city, &quot;city&quot;, 0, 80).toLowerCase(Locale.ROOT);</span>
+<span class="fc bfc" id="L13" title="All 4 branches covered.">        if (minSalary &lt; 0 || minSalary &gt; 1_000_000) throw DomainException.validation(&quot;minSalary: 0–1000000.&quot;);</span>
+<span class="fc bfc" id="L14" title="All 2 branches covered.">        if (status == null) status = &quot;ACTIVE&quot;;</span>
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        if (!List.of(&quot;ACTIVE&quot;, &quot;CLOSED&quot;, &quot;ALL&quot;).contains(status)) throw DomainException.validation(&quot;status: ACTIVE, CLOSED або ALL.&quot;);</span>
+<span class="fc" id="L16">    }</span>
+    public static JobFilter from(Map&lt;String, String&gt; params) {
+<span class="fc" id="L18">        int salary = 0;</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        if (params.containsKey(&quot;minSalary&quot;)) {</span>
+<span class="fc" id="L20">            String value = params.get(&quot;minSalary&quot;);</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            try { if (!value.matches(&quot;[0-9]+&quot;)) throw new NumberFormatException(); salary = Integer.parseInt(value); }</span>
+<span class="fc" id="L22">            catch (NumberFormatException e) { throw DomainException.validation(&quot;minSalary повинен бути цілим невід'ємним числом.&quot;); }</span>
+        }
+<span class="fc" id="L24">        Boolean remote = null;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (params.containsKey(&quot;remote&quot;)) {</span>
+<span class="fc" id="L26">            String value = params.get(&quot;remote&quot;);</span>
+<span class="fc bfc" id="L27" title="All 4 branches covered.">            if (!value.equals(&quot;true&quot;) &amp;&amp; !value.equals(&quot;false&quot;)) throw DomainException.validation(&quot;remote: true або false.&quot;);</span>
+<span class="fc" id="L28">            remote = Boolean.valueOf(value);</span>
+        }
+<span class="fc" id="L30">        return new JobFilter(params.get(&quot;query&quot;), params.get(&quot;city&quot;), salary, remote, params.get(&quot;status&quot;));</span>
+    }
+    public boolean matches(Job job) {
+<span class="fc bfc" id="L33" title="All 4 branches covered.">        return (status.equals(&quot;ALL&quot;) || job.status().name().equals(status))</span>
+<span class="fc bfc" id="L34" title="All 4 branches covered.">            &amp;&amp; (query.isEmpty() || job.title().toLowerCase(Locale.ROOT).contains(query)</span>
+<span class="fc bfc" id="L35" title="All 4 branches covered.">                || job.company().toLowerCase(Locale.ROOT).contains(query) || job.description().toLowerCase(Locale.ROOT).contains(query))</span>
+<span class="fc bfc" id="L36" title="All 4 branches covered.">            &amp;&amp; (city.isEmpty() || job.city().toLowerCase(Locale.ROOT).equals(city))</span>
+<span class="fc bfc" id="L37" title="All 6 branches covered.">            &amp;&amp; job.salary() &gt;= minSalary &amp;&amp; (remote == null || job.remote() == remote);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

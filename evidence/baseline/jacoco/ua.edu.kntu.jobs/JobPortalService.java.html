@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JobPortalService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ІПЗ Якість і тестування програмного забезпечення</a> &gt; <a href="index.source.html" class="el_package">ua.edu.kntu.jobs</a> &gt; <span class="el_source">JobPortalService.java</span></div><h1>JobPortalService.java</h1><pre class="source lang-java linenums">package ua.edu.kntu.jobs;
+
+import java.time.Clock;
+import java.time.Duration;
+import java.util.List;
+import ua.edu.kntu.jobs.Models.*;
+
+public final class JobPortalService {
+<span class="nc" id="L9">    private static final String DUMMY_HASH = new PasswordHasher().hash(&quot;synthetic-dummy-password&quot;);</span>
+    private final SQLiteRepository repository;
+    private final PasswordHasher hasher;
+    private final Clock clock;
+<span class="nc" id="L13">    public JobPortalService(SQLiteRepository repository) { this(repository, new PasswordHasher(), Clock.systemUTC()); }</span>
+<span class="nc" id="L14">    public JobPortalService(SQLiteRepository repository, PasswordHasher hasher, Clock clock) { this.repository = repository; this.hasher = hasher; this.clock = clock; }</span>
+    public User register(String name, String email, String password, String role) {
+<span class="nc" id="L16">        String validName = Validation.text(name, &quot;name&quot;, 2, 80), validEmail = Validation.email(email), validPassword = Validation.password(password);</span>
+<span class="nc" id="L17">        Role validRole = role(role);</span>
+<span class="nc" id="L18">        return repository.insertUser(validName, validEmail, validRole, hasher.hash(validPassword), clock.instant().toString());</span>
+    }
+    public Login login(String email, String password) {
+<span class="nc" id="L21">        String validEmail = Validation.email(email), validPassword = Validation.password(password);</span>
+<span class="nc" id="L22">        StoredUser stored = repository.userByEmail(validEmail).orElse(null);</span>
+        // A missing user still incurs the password KDF, with a process-local dummy hash.
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        boolean matches = hasher.verify(validPassword, stored == null ? DUMMY_HASH : stored.passwordHash());</span>
+<span class="nc bnc" id="L25" title="All 4 branches missed.">        if (stored == null || !matches) throw new DomainException(401, &quot;INVALID_CREDENTIALS&quot;, &quot;Неправильна email-адреса або пароль.&quot;);</span>
+<span class="nc" id="L26">        String token = hasher.newToken(); repository.insertSession(PasswordHasher.tokenDigest(token), stored.user().id(), clock.millis() + Duration.ofHours(8).toMillis());</span>
+<span class="nc" id="L27">        return new Login(stored.user(), token);</span>
+    }
+    public User authenticate(String token) {
+<span class="nc bnc" id="L30" title="All 4 branches missed.">        if (token == null || token.isBlank()) throw unauthorized();</span>
+<span class="nc" id="L31">        return repository.sessionUser(PasswordHasher.tokenDigest(token), clock.millis()).orElseThrow(this::unauthorized);</span>
+    }
+<span class="nc" id="L33">    public void logout(String token) { authenticate(token); repository.deleteSession(PasswordHasher.tokenDigest(token)); }</span>
+    public Resume saveResume(User user, String title, String text, String skills) {
+<span class="nc" id="L35">        requireRole(user, Role.SEEKER);</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        Resume resume = new Resume(user.id(), Validation.text(title, &quot;title&quot;, 5, 120), Validation.text(text, &quot;text&quot;, 20, 10000), Validation.text(skills == null ? &quot;&quot; : skills, &quot;skills&quot;, 0, 1000), clock.instant().toString());</span>
+<span class="nc" id="L37">        return repository.saveResume(resume);</span>
+    }
+<span class="nc" id="L39">    public Resume resume(User user) { requireRole(user, Role.SEEKER); return repository.resume(user.id()).orElseThrow(() -&gt; new DomainException(404, &quot;RESUME_NOT_FOUND&quot;, &quot;Резюме ще не створено.&quot;)); }</span>
+    public Job createJob(User user, String title, String company, String city, int salary, boolean remote, String description) {
+<span class="nc" id="L41">        requireRole(user, Role.EMPLOYER);</span>
+<span class="nc" id="L42">        return repository.insertJob(user.id(), Validation.text(title, &quot;title&quot;, 5, 120), Validation.text(company, &quot;company&quot;, 2, 120), Validation.text(city, &quot;city&quot;, 2, 80), Validation.salary(salary), remote, Validation.text(description, &quot;description&quot;, 20, 10000), clock.instant().toString());</span>
+    }
+<span class="nc" id="L44">    public List&lt;Job&gt; jobs(JobFilter filter) { return repository.jobs().stream().filter(filter::matches).toList(); }</span>
+<span class="nc" id="L45">    public Job job(long id) { return repository.job(id).orElseThrow(() -&gt; new DomainException(404, &quot;JOB_NOT_FOUND&quot;, &quot;Вакансію не знайдено.&quot;)); }</span>
+    public Job changeJobStatus(User user, long id, String status) {
+<span class="nc" id="L47">        requireRole(user, Role.EMPLOYER);</span>
+        JobStatus valid;
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        try { valid = JobStatus.valueOf(status == null ? &quot;&quot; : status); } catch (IllegalArgumentException e) { throw DomainException.validation(&quot;status: ACTIVE або CLOSED.&quot;); }</span>
+<span class="nc" id="L50">        return repository.changeJobStatus(id, user.id(), valid);</span>
+    }
+    public Application apply(User user, long id, String coverLetter) {
+<span class="nc" id="L53">        requireRole(user, Role.SEEKER);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        return repository.insertApplication(id, user.id(), Validation.text(coverLetter == null ? &quot;&quot; : coverLetter, &quot;coverLetter&quot;, 0, 2000), clock.instant().toString());</span>
+    }
+<span class="nc" id="L56">    public List&lt;Application&gt; applications(User user) { requireRole(user, Role.SEEKER); return repository.applications(user.id()); }</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">    public static void requireRole(User user, Role role) { if (user == null || user.role() != role) throw DomainException.forbidden(); }</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">    private Role role(String role) { try { return Role.valueOf(role == null ? &quot;&quot; : role); } catch (IllegalArgumentException e) { throw DomainException.validation(&quot;role: SEEKER або EMPLOYER.&quot;); } }</span>
+<span class="nc" id="L59">    private DomainException unauthorized() { return new DomainException(401, &quot;UNAUTHORIZED&quot;, &quot;Потрібно увійти до облікового запису.&quot;); }</span>
+    public void seedDemo() {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (!repository.jobs().isEmpty()) return;</span>
+<span class="nc" id="L62">        User employer = repository.userByEmail(&quot;employer@example.test&quot;).map(StoredUser::user).orElseGet(() -&gt; register(&quot;Навчальний роботодавець&quot;, &quot;employer@example.test&quot;, &quot;DemoPass26!&quot;, &quot;EMPLOYER&quot;));</span>
+<span class="nc" id="L63">        createJob(employer, &quot;Java Developer&quot;, &quot;Example Engineering&quot;, &quot;Київ&quot;, 40000, false, &quot;Навчальна вакансія: розробка Java застосунків і робота з SQL.&quot;);</span>
+<span class="nc" id="L64">        createJob(employer, &quot;Python Developer&quot;, &quot;Example Analytics&quot;, &quot;Львів&quot;, 50000, true, &quot;Навчальна вакансія: автоматизація обробки даних мовою Python.&quot;);</span>
+<span class="nc" id="L65">        createJob(employer, &quot;Junior Java Developer&quot;, &quot;Example Academy&quot;, &quot;Київ&quot;, 30000, true, &quot;Навчальна вакансія: початкова розробка Java та написання тестів.&quot;);</span>
+<span class="nc" id="L66">        Job closed = createJob(employer, &quot;Java Developer Closed&quot;, &quot;Example Archive&quot;, &quot;Київ&quot;, 60000, false, &quot;Навчальна закрита вакансія для перевірки відмови у відгуку.&quot;);</span>
+<span class="nc" id="L67">        changeJobStatus(employer, closed.id(), &quot;CLOSED&quot;);</span>
+<span class="nc" id="L68">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

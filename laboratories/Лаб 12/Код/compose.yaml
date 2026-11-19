@@ -1,0 +1,24 @@
+name: ipz-labs
+services:
+  app:
+    build: .
+    environment:
+      IPZ_PUBLIC_URL: http://panchyshkin-ipz-app:18727
+    ports:
+      - '127.0.0.1:18727:18727'
+    volumes:
+      - jobs_data:/app/data
+    networks:
+      test:
+        aliases: [panchyshkin-ipz-app]
+  browser:
+    image: selenium/standalone-chromium:latest
+    shm_size: 2gb
+    ports:
+      - '127.0.0.1:4447:4444'
+    networks: [test]
+networks:
+  test:
+    name: ipz-labs-net
+volumes:
+  jobs_data: {}

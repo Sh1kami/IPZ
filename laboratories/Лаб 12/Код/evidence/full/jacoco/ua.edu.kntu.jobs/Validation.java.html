@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Validation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ІПЗ Якість і тестування програмного забезпечення</a> &gt; <a href="index.source.html" class="el_package">ua.edu.kntu.jobs</a> &gt; <span class="el_source">Validation.java</span></div><h1>Validation.java</h1><pre class="source lang-java linenums">package ua.edu.kntu.jobs;
+
+import java.util.Locale;
+import java.util.regex.Pattern;
+
+public final class Validation {
+<span class="fc" id="L7">    private static final Pattern EMAIL = Pattern.compile(&quot;^[A-Za-z0-9.!#$%&amp;'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$&quot;);</span>
+    private Validation() {}
+    public static String text(String value, String field, int min, int max) {
+<span class="fc bfc" id="L10" title="All 2 branches covered.">        if (value == null) throw DomainException.validation(&quot;Поле «&quot; + field + &quot;» обов'язкове.&quot;);</span>
+<span class="fc" id="L11">        String normalized = value.trim();</span>
+<span class="fc" id="L12">        int length = normalized.codePointCount(0, normalized.length());</span>
+<span class="fc bfc" id="L13" title="All 4 branches covered.">        if (length &lt; min || length &gt; max) throw DomainException.validation(&quot;Довжина поля «&quot; + field + &quot;»: &quot; + min + &quot;–&quot; + max + &quot; символів.&quot;);</span>
+<span class="pc bpc" id="L14" title="9 of 12 branches missed.">        if (normalized.codePoints().anyMatch(cp -&gt; cp == 0 || (Character.isISOControl(cp) &amp;&amp; cp != '\n' &amp;&amp; cp != '\r' &amp;&amp; cp != '\t')))</span>
+<span class="nc" id="L15">            throw DomainException.validation(&quot;Поле «&quot; + field + &quot;» містить недопустимий керівний символ.&quot;);</span>
+<span class="fc" id="L16">        return normalized;</span>
+    }
+    public static String email(String value) {
+<span class="fc" id="L19">        String email = text(value, &quot;email&quot;, 3, 254).toLowerCase(Locale.ROOT);</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (!EMAIL.matcher(email).matches()) throw DomainException.validation(&quot;Вкажіть коректну email-адресу.&quot;);</span>
+<span class="fc" id="L21">        return email;</span>
+    }
+    public static String password(String value) {
+<span class="fc bfc" id="L24" title="All 6 branches covered.">        if (value == null || value.codePointCount(0, value.length()) &lt; 8 || value.codePointCount(0, value.length()) &gt; 128)</span>
+<span class="fc" id="L25">            throw DomainException.validation(&quot;Пароль повинен містити 8–128 символів.&quot;);</span>
+<span class="fc" id="L26">        return value;</span>
+    }
+    public static int salary(int value) {
+<span class="fc bfc" id="L29" title="All 4 branches covered.">        if (value &lt; 1 || value &gt; 1_000_000) throw DomainException.validation(&quot;Зарплата: ціле число від 1 до 1000000 грн.&quot;);</span>
+<span class="fc" id="L30">        return value;</span>
+    }
+    public static long id(String value) {
+        try {
+<span class="fc bfc" id="L34" title="All 4 branches covered.">            if (value == null || !value.matches(&quot;[0-9]+&quot;)) throw new NumberFormatException();</span>
+<span class="fc" id="L35">            long id = Long.parseLong(value);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if (id &lt;= 0) throw new NumberFormatException();</span>
+<span class="fc" id="L37">            return id;</span>
+<span class="fc" id="L38">        } catch (NumberFormatException e) { throw DomainException.validation(&quot;Ідентифікатор повинен бути додатним цілим числом.&quot;); }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

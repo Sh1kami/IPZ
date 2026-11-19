@@ -1,0 +1,33 @@
+﻿id,name,method,path,expected_status,actual_status,status,ms,kind
+API01,Health,GET,/api/health,200,200,PASS,12.47,api
+API02,Catalog schema,GET,/api/jobs,200,200,PASS,13.11,api
+API03,Unauthorized profile,GET,/api/me,401,401,PASS,3.44,api
+API04,Register seeker,POST,/api/auth/register,201,201,PASS,181.74,api
+API05,Duplicate email,POST,/api/auth/register,409,409,PASS,139.47,api
+API06,Login cookie,POST,/api/auth/login,200,200,PASS,141.04,api
+API07,Authenticated profile,GET,/api/me,200,200,PASS,11.3,api
+API08,Missing resume,GET,/api/me/resume,404,404,PASS,20.63,api
+API09,Create resume,PUT,/api/me/resume,200,200,PASS,36.81,api
+API10,Invalid resume rejected,PUT,/api/me/resume,400,400,PASS,16.54,api
+API11,Resume remains unchanged,GET,/api/me/resume,200,200,PASS,46.5,api
+API12,Seeker cannot publish,POST,/api/jobs,403,403,PASS,37.98,api
+API13,Register employer,POST,/api/auth/register,201,201,PASS,158.19,api
+API14,Employer login,POST,/api/auth/login,200,200,PASS,169.1,api
+API15,Create vacancy,POST,/api/jobs,201,201,PASS,60.43,api
+API16,Vacancy details,GET,/api/jobs/6,200,200,PASS,10.92,api
+API17,Create application,POST,/api/jobs/6/applications,201,201,PASS,67.56,api
+API18,Duplicate application,POST,/api/jobs/6/applications,409,409,PASS,23.72,api
+API19,Exactly one application,GET,/api/me/applications,200,200,PASS,46.12,api
+API20,Seeker cannot close vacancy,PATCH,/api/jobs/6,403,403,PASS,11.37,api
+API21,Owner closes vacancy,PATCH,/api/jobs/6,200,200,PASS,38.67,api
+API22,Unknown query parameter,GET,/api/jobs?unexpected=1,400,400,PASS,3.31,api
+API23,Unknown resource,GET,/api/unknown,404,404,PASS,2.54,api
+API24,Wrong HTTP method,DELETE,/api/jobs,405,405,PASS,17.11,api
+API25,Logout,POST,/api/auth/logout,200,200,PASS,38.47,api
+API26,Session invalidated,GET,/api/me,401,401,PASS,3.08,api
+SEC01,SQL injection password does not authenticate,POST,/api/auth/login,401,401,PASS,114.57,security
+SEC02,SQL search payload remains literal,GET,/api/jobs?query=%27+OR+1%3D1+--,200,200,PASS,23.38,security
+SEC03,Catalog remains available,GET,/api/jobs,200,200,PASS,10.98,security
+SEC04,Foreign Origin rejected,POST,/api/auth/login,403,403,PASS,27.23,security
+SEC05,Security response headers,GET,/api/health,200,200,PASS,2.04,security
+SEC06,No session for anonymous request,PUT,/api/me/resume,401,401,PASS,29.06,security

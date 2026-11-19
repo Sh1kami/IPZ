@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SQLiteRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ІПЗ Якість і тестування програмного забезпечення</a> &gt; <a href="index.source.html" class="el_package">ua.edu.kntu.jobs</a> &gt; <span class="el_source">SQLiteRepository.java</span></div><h1>SQLiteRepository.java</h1><pre class="source lang-java linenums">package ua.edu.kntu.jobs;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import ua.edu.kntu.jobs.Models.*;
+
+/** Actual SQLite persistence; no database mock and no external database server. */
+public final class SQLiteRepository implements AutoCloseable {
+    private final Path database;
+<span class="nc" id="L15">    public SQLiteRepository(Path database) {</span>
+<span class="nc" id="L16">        this.database = database.toAbsolutePath().normalize();</span>
+        try {
+<span class="nc" id="L18">            Files.createDirectories(this.database.getParent());</span>
+<span class="nc" id="L19">            Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="nc" id="L20">            initialize();</span>
+<span class="nc" id="L21">        } catch (IOException | ClassNotFoundException e) { throw new IllegalStateException(&quot;Cannot open SQLite&quot;, e); }</span>
+<span class="nc" id="L22">    }</span>
+<span class="nc" id="L23">    public Path databasePath() { return database; }</span>
+    private Connection open() throws SQLException {
+<span class="nc" id="L25">        Connection connection = DriverManager.getConnection(&quot;jdbc:sqlite:&quot; + database);</span>
+<span class="nc" id="L26">        try (Statement statement = connection.createStatement()) {</span>
+<span class="nc" id="L27">            statement.execute(&quot;PRAGMA foreign_keys=ON&quot;);</span>
+<span class="nc" id="L28">            statement.execute(&quot;PRAGMA busy_timeout=5000&quot;);</span>
+        }
+<span class="nc" id="L30">        return connection;</span>
+    }
+    private void initialize() {
+<span class="nc" id="L33">        try (Connection c = open(); Statement s = c.createStatement()) {</span>
+<span class="nc" id="L34">            s.execute(&quot;CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, role TEXT NOT NULL CHECK(role IN ('SEEKER','EMPLOYER')), password_hash TEXT NOT NULL, created_at TEXT NOT NULL)&quot;);</span>
+<span class="nc" id="L35">            s.execute(&quot;CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id), expires_at INTEGER NOT NULL)&quot;);</span>
+<span class="nc" id="L36">            s.execute(&quot;CREATE TABLE IF NOT EXISTS resumes (user_id INTEGER PRIMARY KEY REFERENCES users(id), title TEXT NOT NULL, text TEXT NOT NULL, skills TEXT NOT NULL, updated_at TEXT NOT NULL)&quot;);</span>
+<span class="nc" id="L37">            s.execute(&quot;CREATE TABLE IF NOT EXISTS jobs (id INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER NOT NULL REFERENCES users(id), title TEXT NOT NULL, company TEXT NOT NULL, city TEXT NOT NULL, salary INTEGER NOT NULL CHECK(salary BETWEEN 1 AND 1000000), remote INTEGER NOT NULL CHECK(remote IN (0,1)), description TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('ACTIVE','CLOSED')), created_at TEXT NOT NULL)&quot;);</span>
+<span class="nc" id="L38">            s.execute(&quot;CREATE TABLE IF NOT EXISTS applications (id INTEGER PRIMARY KEY AUTOINCREMENT, job_id INTEGER NOT NULL REFERENCES jobs(id), seeker_id INTEGER NOT NULL REFERENCES users(id), cover_letter TEXT NOT NULL, resume_title TEXT NOT NULL, resume_text TEXT NOT NULL, resume_skills TEXT NOT NULL, created_at TEXT NOT NULL, UNIQUE(job_id,seeker_id))&quot;);</span>
+<span class="nc" id="L39">            s.execute(&quot;CREATE INDEX IF NOT EXISTS applications_seeker ON applications(seeker_id)&quot;);</span>
+<span class="nc" id="L40">        } catch (SQLException e) { throw databaseError(e); }</span>
+<span class="nc" id="L41">    }</span>
+    public User insertUser(String name, String email, Role role, String passwordHash, String createdAt) {
+<span class="nc" id="L43">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;INSERT INTO users(name,email,role,password_hash,created_at) VALUES(?,?,?,?,?)&quot;, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="nc" id="L44">            p.setString(1, name); p.setString(2, email); p.setString(3, role.name()); p.setString(4, passwordHash); p.setString(5, createdAt); p.executeUpdate();</span>
+<span class="nc" id="L45">            return new User(key(p), name, email, role, createdAt);</span>
+<span class="nc" id="L46">        } catch (SQLException e) {</span>
+<span class="nc bnc" id="L47" title="All 4 branches missed.">            if (e.getErrorCode() == 19 &amp;&amp; e.getMessage().contains(&quot;users.email&quot;)) throw new DomainException(409, &quot;EMAIL_EXISTS&quot;, &quot;Ця email-адреса вже зареєстрована.&quot;);</span>
+<span class="nc" id="L48">            throw databaseError(e);</span>
+        }
+    }
+    public Optional&lt;StoredUser&gt; userByEmail(String email) {
+<span class="nc" id="L52">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;SELECT * FROM users WHERE email=?&quot;)) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            p.setString(1, email); try (ResultSet r = p.executeQuery()) { return r.next() ? Optional.of(new StoredUser(user(r), r.getString(&quot;password_hash&quot;))) : Optional.empty(); }</span>
+<span class="nc" id="L54">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    public void insertSession(String tokenHash, long userId, long expiresAt) {
+<span class="nc" id="L57">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;INSERT INTO sessions(token_hash,user_id,expires_at) VALUES(?,?,?)&quot;)) {</span>
+<span class="nc" id="L58">            p.setString(1, tokenHash); p.setLong(2, userId); p.setLong(3, expiresAt); p.executeUpdate();</span>
+<span class="nc" id="L59">        } catch (SQLException e) { throw databaseError(e); }</span>
+<span class="nc" id="L60">    }</span>
+    public Optional&lt;User&gt; sessionUser(String tokenHash, long now) {
+<span class="nc" id="L62">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;SELECT u.* FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token_hash=? AND s.expires_at&gt;?&quot;)) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            p.setString(1, tokenHash); p.setLong(2, now); try (ResultSet r = p.executeQuery()) { return r.next() ? Optional.of(user(r)) : Optional.empty(); }</span>
+<span class="nc" id="L64">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    public void deleteSession(String tokenHash) {
+<span class="nc" id="L67">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;DELETE FROM sessions WHERE token_hash=?&quot;)) { p.setString(1, tokenHash); p.executeUpdate(); }</span>
+<span class="nc" id="L68">        catch (SQLException e) { throw databaseError(e); }</span>
+<span class="nc" id="L69">    }</span>
+    public Resume saveResume(Resume resume) {
+<span class="nc" id="L71">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;INSERT INTO resumes(user_id,title,text,skills,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET title=excluded.title,text=excluded.text,skills=excluded.skills,updated_at=excluded.updated_at&quot;)) {</span>
+<span class="nc" id="L72">            p.setLong(1, resume.userId()); p.setString(2, resume.title()); p.setString(3, resume.text()); p.setString(4, resume.skills()); p.setString(5, resume.updatedAt()); p.executeUpdate(); return resume;</span>
+<span class="nc" id="L73">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    public Optional&lt;Resume&gt; resume(long userId) {
+<span class="nc" id="L76">        try (Connection c = open()) { return resume(c, userId); }</span>
+<span class="nc" id="L77">        catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    private Optional&lt;Resume&gt; resume(Connection c, long userId) throws SQLException {
+<span class="nc" id="L80">        try (PreparedStatement p = c.prepareStatement(&quot;SELECT * FROM resumes WHERE user_id=?&quot;)) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            p.setLong(1, userId); try (ResultSet r = p.executeQuery()) { return r.next() ? Optional.of(new Resume(userId, r.getString(&quot;title&quot;), r.getString(&quot;text&quot;), r.getString(&quot;skills&quot;), r.getString(&quot;updated_at&quot;))) : Optional.empty(); }</span>
+        }
+    }
+    public Job insertJob(long ownerId, String title, String company, String city, int salary, boolean remote, String description, String createdAt) {
+<span class="nc" id="L85">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;INSERT INTO jobs(owner_id,title,company,city,salary,remote,description,status,created_at) VALUES(?,?,?,?,?,?,?,'ACTIVE',?)&quot;, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="nc" id="L86">            p.setLong(1, ownerId); p.setString(2, title); p.setString(3, company); p.setString(4, city); p.setInt(5, salary); p.setBoolean(6, remote); p.setString(7, description); p.setString(8, createdAt); p.executeUpdate();</span>
+<span class="nc" id="L87">            return new Job(key(p), ownerId, title, company, city, salary, remote, description, JobStatus.ACTIVE, createdAt);</span>
+<span class="nc" id="L88">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    public List&lt;Job&gt; jobs() {
+<span class="nc" id="L91">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;SELECT * FROM jobs ORDER BY id&quot;)) {</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            List&lt;Job&gt; list = new ArrayList&lt;&gt;(); try (ResultSet r = p.executeQuery()) { while (r.next()) list.add(job(r)); } return list;</span>
+<span class="nc" id="L93">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    public Optional&lt;Job&gt; job(long id) {
+<span class="nc" id="L96">        try (Connection c = open()) { return job(c, id); }</span>
+<span class="nc" id="L97">        catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    private Optional&lt;Job&gt; job(Connection c, long id) throws SQLException {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        try (PreparedStatement p = c.prepareStatement(&quot;SELECT * FROM jobs WHERE id=?&quot;)) { p.setLong(1, id); try (ResultSet r = p.executeQuery()) { return r.next() ? Optional.of(job(r)) : Optional.empty(); } }</span>
+    }
+    public synchronized Job changeJobStatus(long id, long ownerId, JobStatus status) {
+<span class="nc" id="L103">        try (Connection c = open()) {</span>
+<span class="nc" id="L104">            Job old = job(c, id).orElseThrow(() -&gt; new DomainException(404, &quot;JOB_NOT_FOUND&quot;, &quot;Вакансію не знайдено.&quot;));</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (old.ownerId() != ownerId) throw DomainException.forbidden();</span>
+<span class="nc" id="L106">            try (PreparedStatement p = c.prepareStatement(&quot;UPDATE jobs SET status=? WHERE id=? AND owner_id=?&quot;)) { p.setString(1, status.name()); p.setLong(2, id); p.setLong(3, ownerId); p.executeUpdate(); }</span>
+<span class="nc" id="L107">            return new Job(old.id(), old.ownerId(), old.title(), old.company(), old.city(), old.salary(), old.remote(), old.description(), status, old.createdAt());</span>
+<span class="nc" id="L108">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    /** Status, resume snapshot and unique insertion are checked inside one real transaction. */
+    public synchronized Application insertApplication(long jobId, long seekerId, String coverLetter, String createdAt) {
+<span class="nc" id="L112">        try (Connection c = open()) {</span>
+<span class="nc" id="L113">            c.setAutoCommit(false);</span>
+            try {
+<span class="nc" id="L115">                Job job = job(c, jobId).orElseThrow(() -&gt; new DomainException(404, &quot;JOB_NOT_FOUND&quot;, &quot;Вакансію не знайдено.&quot;));</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                if (job.status() != JobStatus.ACTIVE) throw new DomainException(409, &quot;JOB_CLOSED&quot;, &quot;Цю вакансію закрито.&quot;);</span>
+<span class="nc" id="L117">                Resume resume = resume(c, seekerId).orElseThrow(() -&gt; new DomainException(409, &quot;RESUME_REQUIRED&quot;, &quot;Спочатку збережіть своє резюме.&quot;));</span>
+<span class="nc" id="L118">                try (PreparedStatement p = c.prepareStatement(&quot;INSERT INTO applications(job_id,seeker_id,cover_letter,resume_title,resume_text,resume_skills,created_at) VALUES(?,?,?,?,?,?,?)&quot;, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="nc" id="L119">                    p.setLong(1, jobId); p.setLong(2, seekerId); p.setString(3, coverLetter); p.setString(4, resume.title()); p.setString(5, resume.text()); p.setString(6, resume.skills()); p.setString(7, createdAt); p.executeUpdate();</span>
+<span class="nc" id="L120">                    Application app = new Application(key(p), jobId, seekerId, coverLetter, resume.title(), resume.text(), resume.skills(), createdAt, job.title(), job.company());</span>
+<span class="nc" id="L121">                    c.commit(); return app;</span>
+                }
+<span class="nc" id="L123">            } catch (SQLException | RuntimeException e) {</span>
+<span class="nc" id="L124">                c.rollback();</span>
+<span class="nc bnc" id="L125" title="All 6 branches missed.">                if (e instanceof SQLException sql &amp;&amp; sql.getErrorCode() == 19 &amp;&amp; sql.getMessage().contains(&quot;applications.job_id&quot;))</span>
+<span class="nc" id="L126">                    throw new DomainException(409, &quot;DUPLICATE_APPLICATION&quot;, &quot;Ви вже надіслали відгук на цю вакансію.&quot;);</span>
+<span class="nc" id="L127">                throw e;</span>
+            }
+<span class="nc" id="L129">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+    public List&lt;Application&gt; applications(long seekerId) {
+<span class="nc" id="L132">        try (Connection c = open(); PreparedStatement p = c.prepareStatement(&quot;SELECT a.*,j.title AS job_title,j.company AS company FROM applications a JOIN jobs j ON j.id=a.job_id WHERE a.seeker_id=? ORDER BY a.id&quot;)) {</span>
+<span class="nc" id="L133">            p.setLong(1, seekerId); List&lt;Application&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            try (ResultSet r = p.executeQuery()) { while (r.next()) list.add(new Application(r.getLong(&quot;id&quot;), r.getLong(&quot;job_id&quot;), r.getLong(&quot;seeker_id&quot;), r.getString(&quot;cover_letter&quot;), r.getString(&quot;resume_title&quot;), r.getString(&quot;resume_text&quot;), r.getString(&quot;resume_skills&quot;), r.getString(&quot;created_at&quot;), r.getString(&quot;job_title&quot;), r.getString(&quot;company&quot;))); } return list;</span>
+<span class="nc" id="L135">        } catch (SQLException e) { throw databaseError(e); }</span>
+    }
+<span class="nc" id="L137">    private User user(ResultSet r) throws SQLException { return new User(r.getLong(&quot;id&quot;), r.getString(&quot;name&quot;), r.getString(&quot;email&quot;), Role.valueOf(r.getString(&quot;role&quot;)), r.getString(&quot;created_at&quot;)); }</span>
+<span class="nc" id="L138">    private Job job(ResultSet r) throws SQLException { return new Job(r.getLong(&quot;id&quot;), r.getLong(&quot;owner_id&quot;), r.getString(&quot;title&quot;), r.getString(&quot;company&quot;), r.getString(&quot;city&quot;), r.getInt(&quot;salary&quot;), r.getBoolean(&quot;remote&quot;), r.getString(&quot;description&quot;), JobStatus.valueOf(r.getString(&quot;status&quot;)), r.getString(&quot;created_at&quot;)); }</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">    private long key(PreparedStatement p) throws SQLException { try (ResultSet r = p.getGeneratedKeys()) { if (!r.next()) throw new SQLException(&quot;Missing generated key&quot;); return r.getLong(1); } }</span>
+<span class="nc" id="L140">    private IllegalStateException databaseError(SQLException e) { return new IllegalStateException(&quot;SQLite operation failed&quot;, e); }</span>
+<span class="nc" id="L141">    @Override public void close() { /* Each operation owns and closes its connection. */ }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

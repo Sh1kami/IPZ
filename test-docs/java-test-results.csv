@@ -1,0 +1,68 @@
+﻿class,name,seconds,status
+ua.edu.kntu.jobs.JobFilterTest,wildcardAndSqlLikeCharactersAreLiteralSubstrings,0.039,PASS
+ua.edu.kntu.jobs.JobFilterTest,queryAndCityLimitsCountCodePointsAfterTrim,0.019,PASS
+ua.edu.kntu.jobs.JobFilterTest,matchingDoesNotDependOnTheProcessDefaultLocale,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,defaultFilterSelectsActiveJobsOfBothWorkModes,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,everyFilterCombinesWithAndAndTheSalaryThresholdIsInclusive,0.002,PASS
+ua.edu.kntu.jobs.JobFilterTest,minimumSalaryZeroAndMaximumAreAllowed,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,querySearchesTitleCompanyAndDescriptionButNotCity,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,trueAndFalseRemoteFiltersAreDifferentFromAnOmittedFilter,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,allStatusIncludesBothAndClosedStatusExcludesActive,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,queryAndCityMatchCyrillicWithRootLocaleNormalization,0.0,PASS
+ua.edu.kntu.jobs.JobFilterTest,malformedSalaryRemoteAndStatusUseStableValidationErrors,0.001,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,applicationSnapshotDuplicateAndPrivacyArePersisted,1.738,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,invalidResumeOrSalaryDoesNotReplaceValidState,0.395,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,normalizedEmailIsUniqueAndRejectedInsertLeavesUsersUnchanged,0.556,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,rolesCannotCrossResumeJobOrApplicationBoundaries,0.319,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,resumeUpsertAndOwnUserIsolation,0.739,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,simultaneousDuplicateApplicationCreatesExactlyOneRow,0.381,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,reopeningSameDatabasePreservesAllEntitiesAndOtherFileIsEmpty,0.423,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,jobStatusOnlyChangesForOwnerAndHiddenFromDefaultCatalog,0.448,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,applicationPreconditionsDoNotInsertRows,0.357,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,wrongAndUnknownCredentialsHaveSameErrorAndNoSession,0.523,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,fourVacancySeedIsIdempotentAndFiltersHaveIndependentOracle,0.356,PASS
+ua.edu.kntu.jobs.JobPortalServiceTest,loginExpiryAtExactlyEightHoursAndLogoutInvalidateTokens,0.569,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,malformedOrUnsupportedStoredHashesReturnFalseWithoutThrowing,0.002,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,wellFormedHashWithOneChangedKeyBitDoesNotAuthenticate,0.109,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,tokensHaveThirtyTwoRandomBytesAndAreSafeForCookies,0.004,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,verificationPreservesPasswordWhitespaceCaseAndUnicode,0.313,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,storedKeyReallyUsesContractAlgorithmIterationsAndBitLength,0.121,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,tokenDigestMatchesKnownSha256VectorAndIsDeterministic,0.0,PASS
+ua.edu.kntu.jobs.PasswordHasherTest,samePasswordHasDifferentRandomSaltsAndKeysButBothVerify,0.209,PASS
+ua.edu.kntu.jobs.RegressionTest,salaryAboveBoundary,0.0,PASS
+ua.edu.kntu.jobs.RegressionTest,caseInsensitiveSearch,0.0,PASS
+ua.edu.kntu.jobs.RegressionTest,cityCaseInsensitive,0.0,PASS
+ua.edu.kntu.jobs.RegressionTest,salaryLowerBoundary,0.0,PASS
+ua.edu.kntu.jobs.RegressionTest,remoteMismatch,0.0,PASS
+ua.edu.kntu.jobs.RegressionTest,combinedFilters,0.0,PASS
+Job search and application,Case insensitive search,0.549,PASS
+Job search and application,No matching vacancy,0.25,PASS
+Job search and application,Salary boundary is inclusive,0.229,PASS
+Job search and application,Successful application,0.356,PASS
+Job search and application,Repeated application is rejected,0.348,PASS
+Job search and application,Closed vacancy is unavailable,0.334,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,ownershipAndRoleMatrixPreserveDatabase,1.957,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,validApplicationSnapshotDuplicateAndPrivateList,1.462,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,restartingHttpWithSameDatabasePreservesSessionAndEntities,1.037,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,strictJsonTypesBodyLimitAndMediaTypeAreRejectedWithoutInsert,0.748,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,resumeUpsertIsOnlyForOwnSeekerAndDefaultSkillsIsEmpty,1.035,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,registrationNormalizesDuplicateAndDoesNotAuthenticate,0.613,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,parallelHttpDuplicateApplicationYieldsOneCreatedAndOneConflict,0.927,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,createdJobDetailsAndStatusChangePreserveFieldsAndIgnoreSpoofedOwner,0.64,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,routesMethodsIdsAndMalformedFiltersHaveStableErrors,0.653,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,actualLoginCookieDigestLogoutAndGenericWrongCredentials,0.768,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,applicationPreconditionsAndInvalidLetterProduceNoRows,1.068,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,originUsesActualDynamicPortAndHeadersArePresent,0.215,PASS
+ua.edu.kntu.jobs.SQLiteHttpIntegrationTest,unicodeSearchAndCombinedFiltersHaveExactSeedOracle,0.449,PASS
+ua.edu.kntu.jobs.StartupTest,realServerStartsOnDynamicPortAndServesHealthAndEmptyCatalog,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,malformedOrNonPositiveIdUsesTheValidationError,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,requiredTextRejectsNullAndTrimmedBlank,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,emailTrimsAndUsesRootLocaleEvenWhenDefaultLocaleIsTurkish,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,salaryAcceptsBothInclusiveBoundsAndRejectsOutsideValues,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,emailRejectsAddressesOutsideTheExplicitContractPattern,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,passwordCountsUnicodeCodePointsAndPreservesWhitespace,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,printableInputRemainsLiteralRatherThanBecomingExecutableMarkup,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,textBoundsCountUnicodeCodePointsAfterTrim,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,idAcceptsPositiveIntegersIncludingTheStorageLimit,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,emailAcceptsContractPatternAndExactLengthLimit,0.0,PASS
+ua.edu.kntu.jobs.ValidationTest,passwordAsciiBoundsAreInclusiveAndMissingPasswordIsInvalid,0.0,PASS

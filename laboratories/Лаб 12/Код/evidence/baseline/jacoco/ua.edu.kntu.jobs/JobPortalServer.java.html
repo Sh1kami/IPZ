@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JobPortalServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ІПЗ Якість і тестування програмного забезпечення</a> &gt; <a href="index.source.html" class="el_package">ua.edu.kntu.jobs</a> &gt; <span class="el_source">JobPortalServer.java</span></div><h1>JobPortalServer.java</h1><pre class="source lang-java linenums">package ua.edu.kntu.jobs;
+
+import com.google.gson.*;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import ua.edu.kntu.jobs.Models.*;
+
+public final class JobPortalServer implements AutoCloseable {
+    private static final int MAX_BODY = 65536;
+<span class="nc" id="L23">    private final Gson gson = new GsonBuilder().setStrictness(Strictness.STRICT).disableHtmlEscaping().create();</span>
+    private final JobPortalService service;
+    private final SQLiteRepository repository;
+    private HttpServer server;
+    private ExecutorService executor;
+    private String baseUrl;
+<span class="nc" id="L29">    public JobPortalServer(Path database) { repository = new SQLiteRepository(database); service = new JobPortalService(repository); }</span>
+<span class="nc" id="L30">    public JobPortalService service() { return service; }</span>
+    public synchronized JobPortalServer start(int port) throws IOException {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (server != null) throw new IllegalStateException(&quot;Server is already started&quot;);</span>
+<span class="nc" id="L33">        server = HttpServer.create(new InetSocketAddress(System.getenv().getOrDefault(&quot;IPZ_BIND_HOST&quot;, &quot;127.0.0.1&quot;), port), 0);</span>
+<span class="nc" id="L34">        baseUrl = System.getenv().getOrDefault(&quot;IPZ_PUBLIC_URL&quot;, &quot;http://127.0.0.1:&quot; + server.getAddress().getPort());</span>
+<span class="nc" id="L35">        executor = Executors.newFixedThreadPool(8);</span>
+<span class="nc" id="L36">        server.setExecutor(executor); server.createContext(&quot;/&quot;, this::handle); server.start(); return this;</span>
+    }
+<span class="nc bnc" id="L38" title="All 2 branches missed.">    public String baseUrl() { if (baseUrl == null) throw new IllegalStateException(&quot;Not started&quot;); return baseUrl; }</span>
+    private void handle(HttpExchange exchange) throws IOException {
+<span class="nc" id="L40">        int status = 500;</span>
+        try {
+<span class="nc" id="L42">            String path = exchange.getRequestURI().getPath(), method = exchange.getRequestMethod();</span>
+<span class="nc" id="L43">            securityHeaders(exchange);</span>
+<span class="nc bnc" id="L44" title="All 4 branches missed.">            if (!method.equals(&quot;GET&quot;) &amp;&amp; !method.equals(&quot;HEAD&quot;)) {</span>
+<span class="nc" id="L45">                String origin = exchange.getRequestHeaders().getFirst(&quot;Origin&quot;);</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">                if (origin != null &amp;&amp; !origin.equals(baseUrl)) throw new DomainException(403, &quot;ORIGIN_NOT_ALLOWED&quot;, &quot;Сторонній Origin не дозволено.&quot;);</span>
+            }
+<span class="nc bnc" id="L48" title="All 4 branches missed.">            if (path.equals(&quot;/&quot;) || path.equals(&quot;/index.html&quot;)) { require(method, &quot;GET&quot;); status = 200; resource(exchange, &quot;index.html&quot;, &quot;text/html; charset=utf-8&quot;); }</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            else if (path.equals(&quot;/app.js&quot;)) { require(method, &quot;GET&quot;); status = 200; resource(exchange, &quot;app.js&quot;, &quot;text/javascript; charset=utf-8&quot;); }</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            else if (path.equals(&quot;/style.css&quot;)) { require(method, &quot;GET&quot;); status = 200; resource(exchange, &quot;style.css&quot;, &quot;text/css; charset=utf-8&quot;); }</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            else if (path.equals(&quot;/favicon.ico&quot;)) { require(method, &quot;GET&quot;); status = 204; exchange.sendResponseHeaders(204, -1); }</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            else if (path.equals(&quot;/api/health&quot;)) { require(method, &quot;GET&quot;); status = json(exchange, 200, Map.of(&quot;status&quot;, &quot;ok&quot;, &quot;variant&quot;, 26)); }</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            else if (path.equals(&quot;/api/auth/register&quot;)) {</span>
+<span class="nc" id="L54">                require(method, &quot;POST&quot;); JsonObject b = body(exchange);</span>
+<span class="nc" id="L55">                User user = service.register(string(b,&quot;name&quot;,true),string(b,&quot;email&quot;,true),string(b,&quot;password&quot;,true),string(b,&quot;role&quot;,true));</span>
+<span class="nc" id="L56">                status = json(exchange, 201, Map.of(&quot;user&quot;, user));</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">            } else if (path.equals(&quot;/api/auth/login&quot;)) {</span>
+<span class="nc" id="L58">                require(method, &quot;POST&quot;); JsonObject b = body(exchange); Login login = service.login(string(b,&quot;email&quot;,true),string(b,&quot;password&quot;,true));</span>
+<span class="nc" id="L59">                exchange.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;JSESSION=&quot; + login.token() + &quot;; Path=/; HttpOnly; SameSite=Strict&quot;);</span>
+<span class="nc" id="L60">                status = json(exchange, 200, Map.of(&quot;user&quot;, login.user()));</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            } else if (path.equals(&quot;/api/auth/logout&quot;)) {</span>
+<span class="nc" id="L62">                require(method, &quot;POST&quot;); service.logout(token(exchange));</span>
+<span class="nc" id="L63">                exchange.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;JSESSION=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0&quot;);</span>
+<span class="nc" id="L64">                status = json(exchange, 200, Map.of(&quot;ok&quot;, true));</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            } else if (path.equals(&quot;/api/me&quot;)) { require(method, &quot;GET&quot;); status = json(exchange, 200, Map.of(&quot;user&quot;, user(exchange))); }</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            else if (path.equals(&quot;/api/me/resume&quot;)) {</span>
+<span class="nc" id="L67">                require(method, &quot;GET&quot;, &quot;PUT&quot;); User user = user(exchange);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                if (method.equals(&quot;GET&quot;)) status = json(exchange, 200, Map.of(&quot;resume&quot;, service.resume(user)));</span>
+<span class="nc" id="L69">                else { JsonObject b = body(exchange); status = json(exchange, 200, Map.of(&quot;resume&quot;, service.saveResume(user,string(b,&quot;title&quot;,true),string(b,&quot;text&quot;,true),string(b,&quot;skills&quot;,false)))); }</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            } else if (path.equals(&quot;/api/me/applications&quot;)) {</span>
+<span class="nc" id="L71">                require(method, &quot;GET&quot;); List&lt;Application&gt; applications = service.applications(user(exchange)); status = json(exchange, 200, Map.of(&quot;applications&quot;, applications, &quot;count&quot;, applications.size()));</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            } else if (path.equals(&quot;/api/jobs&quot;)) {</span>
+<span class="nc" id="L73">                require(method, &quot;GET&quot;, &quot;POST&quot;);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                if (method.equals(&quot;GET&quot;)) { List&lt;Job&gt; jobs = service.jobs(JobFilter.from(query(exchange))); status = json(exchange, 200, Map.of(&quot;jobs&quot;, jobs, &quot;count&quot;, jobs.size())); }</span>
+                else {
+<span class="nc" id="L76">                    User user = user(exchange); JobPortalService.requireRole(user, Role.EMPLOYER); JsonObject b = body(exchange);</span>
+<span class="nc" id="L77">                    Job job = service.createJob(user,string(b,&quot;title&quot;,true),string(b,&quot;company&quot;,true),string(b,&quot;city&quot;,true),integer(b,&quot;salary&quot;),bool(b,&quot;remote&quot;),string(b,&quot;description&quot;,true));</span>
+<span class="nc" id="L78">                    exchange.getResponseHeaders().add(&quot;Location&quot;, &quot;/api/jobs/&quot; + job.id()); status = json(exchange, 201, Map.of(&quot;job&quot;, job));</span>
+<span class="nc" id="L79">                }</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            } else if (path.startsWith(&quot;/api/jobs/&quot;)) {</span>
+<span class="nc" id="L81">                String[] parts = path.substring(&quot;/api/jobs/&quot;.length()).split(&quot;/&quot;, -1);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                if (parts.length == 1) {</span>
+<span class="nc" id="L83">                    require(method, &quot;GET&quot;, &quot;PATCH&quot;); long id = Validation.id(parts[0]);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                    if (method.equals(&quot;GET&quot;)) status = json(exchange, 200, Map.of(&quot;job&quot;, service.job(id)));</span>
+<span class="nc" id="L85">                    else { User user = user(exchange); JobPortalService.requireRole(user, Role.EMPLOYER); JsonObject b = body(exchange); status = json(exchange, 200, Map.of(&quot;job&quot;, service.changeJobStatus(user,id,string(b,&quot;status&quot;,true)))); }</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">                } else if (parts.length == 2 &amp;&amp; parts[1].equals(&quot;applications&quot;)) {</span>
+<span class="nc" id="L87">                    require(method, &quot;POST&quot;); User user = user(exchange); JobPortalService.requireRole(user, Role.SEEKER); long id = Validation.id(parts[0]); JsonObject b = body(exchange);</span>
+<span class="nc" id="L88">                    status = json(exchange, 201, Map.of(&quot;application&quot;, service.apply(user,id,string(b,&quot;coverLetter&quot;,false))));</span>
+<span class="nc" id="L89">                } else throw new DomainException(404, &quot;NOT_FOUND&quot;, &quot;Маршрут не знайдено.&quot;);</span>
+<span class="nc" id="L90">            } else throw new DomainException(404, &quot;NOT_FOUND&quot;, &quot;Маршрут не знайдено.&quot;);</span>
+<span class="nc" id="L91">        } catch (DomainException e) { status = json(exchange, e.status(), Map.of(&quot;error&quot;, Map.of(&quot;code&quot;,e.code(),&quot;message&quot;,e.getMessage()))); }</span>
+<span class="nc" id="L92">        catch (Exception e) {</span>
+            // Log class only: do not print request payloads, passwords, cookies or SQL values.
+<span class="nc" id="L94">            System.err.println(&quot;Request failed: &quot; + e.getClass().getSimpleName());</span>
+<span class="nc" id="L95">            status = json(exchange, 500, Map.of(&quot;error&quot;, Map.of(&quot;code&quot;,&quot;INTERNAL_ERROR&quot;,&quot;message&quot;,&quot;Внутрішня помилка сервера.&quot;)));</span>
+        } finally {
+<span class="nc" id="L97">            System.out.printf(&quot;%s %s %s -&gt; %d%n&quot;, Instant.now(), exchange.getRequestMethod(), exchange.getRequestURI().getPath(), status);</span>
+<span class="nc" id="L98">            exchange.close();</span>
+        }
+<span class="nc" id="L100">    }</span>
+    private void securityHeaders(HttpExchange e) {
+<span class="nc" id="L102">        e.getResponseHeaders().set(&quot;X-Content-Type-Options&quot;, &quot;nosniff&quot;);</span>
+<span class="nc" id="L103">        e.getResponseHeaders().set(&quot;X-Frame-Options&quot;, &quot;DENY&quot;);</span>
+<span class="nc" id="L104">        e.getResponseHeaders().set(&quot;Referrer-Policy&quot;, &quot;no-referrer&quot;);</span>
+<span class="nc" id="L105">        e.getResponseHeaders().set(&quot;Content-Security-Policy&quot;, &quot;default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'&quot;);</span>
+<span class="nc" id="L106">        e.getResponseHeaders().set(&quot;Cache-Control&quot;, &quot;no-store&quot;);</span>
+<span class="nc" id="L107">    }</span>
+<span class="nc" id="L108">    private User user(HttpExchange e) { return service.authenticate(token(e)); }</span>
+    private String token(HttpExchange e) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        List&lt;String&gt; headers = e.getRequestHeaders().get(&quot;Cookie&quot;); if (headers == null) return null;</span>
+<span class="nc bnc" id="L111" title="All 6 branches missed.">        for (String header : headers) for (String part : header.split(&quot;;&quot;)) { String item = part.trim(); if (item.startsWith(&quot;JSESSION=&quot;)) return item.substring(9); }</span>
+<span class="nc" id="L112">        return null;</span>
+    }
+    private JsonObject body(HttpExchange e) throws IOException {
+<span class="nc" id="L115">        String type = e.getRequestHeaders().getFirst(&quot;Content-Type&quot;);</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">        if (type == null || !type.split(&quot;;&quot;,2)[0].trim().equalsIgnoreCase(&quot;application/json&quot;)) throw new DomainException(415,&quot;UNSUPPORTED_MEDIA_TYPE&quot;,&quot;Очікується application/json.&quot;);</span>
+<span class="nc" id="L117">        byte[] bytes = e.getRequestBody().readNBytes(MAX_BODY + 1);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (bytes.length &gt; MAX_BODY) throw new DomainException(413,&quot;BODY_TOO_LARGE&quot;,&quot;Тіло запиту перевищує 65536 байтів.&quot;);</span>
+        try {
+<span class="nc" id="L120">            String text = StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes)).toString();</span>
+<span class="nc" id="L121">            JsonElement element = gson.fromJson(text, JsonElement.class);</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">            if (element == null || !element.isJsonObject()) throw new JsonParseException(&quot;Object required&quot;);</span>
+<span class="nc" id="L123">            return element.getAsJsonObject();</span>
+<span class="nc" id="L124">        } catch (JsonParseException | CharacterCodingException e1) { throw new DomainException(400,&quot;BAD_JSON&quot;,&quot;Очікується коректний JSON-об'єкт UTF-8.&quot;); }</span>
+    }
+    private String string(JsonObject b, String field, boolean required) {
+<span class="nc" id="L127">        JsonElement value = b.get(field);</span>
+<span class="nc bnc" id="L128" title="All 4 branches missed.">        if (value == null) { if (required) throw DomainException.validation(&quot;Поле «&quot; + field + &quot;» обов'язкове.&quot;); return null; }</span>
+<span class="nc bnc" id="L129" title="All 4 branches missed.">        if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isString()) throw DomainException.validation(&quot;Поле «&quot; + field + &quot;» повинно бути рядком.&quot;);</span>
+<span class="nc" id="L130">        return value.getAsString();</span>
+    }
+    private int integer(JsonObject b, String field) {
+<span class="nc" id="L133">        JsonElement value = b.get(field);</span>
+<span class="nc bnc" id="L134" title="All 8 branches missed.">        if (value == null || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber() || !value.toString().matches(&quot;-?[0-9]+&quot;)) throw DomainException.validation(&quot;Поле «&quot; + field + &quot;» повинно бути цілим числом.&quot;);</span>
+<span class="nc" id="L135">        try { return value.getAsBigDecimal().intValueExact(); } catch (ArithmeticException e) { throw DomainException.validation(&quot;Число «&quot; + field + &quot;» завелике.&quot;); }</span>
+    }
+    private boolean bool(JsonObject b, String field) {
+<span class="nc" id="L138">        JsonElement value = b.get(field);</span>
+<span class="nc bnc" id="L139" title="All 6 branches missed.">        if (value == null || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isBoolean()) throw DomainException.validation(&quot;Поле «&quot; + field + &quot;» повинно бути boolean.&quot;);</span>
+<span class="nc" id="L140">        return value.getAsBoolean();</span>
+    }
+    private Map&lt;String,String&gt; query(HttpExchange e) {
+<span class="nc bnc" id="L143" title="All 4 branches missed.">        Map&lt;String,String&gt; map = new HashMap&lt;&gt;(); String raw = e.getRequestURI().getRawQuery(); if (raw == null || raw.isEmpty()) return map;</span>
+        try {
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            for (String part : raw.split(&quot;&amp;&quot;)) {</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                String[] pair = part.split(&quot;=&quot;,2); String key = URLDecoder.decode(pair[0],StandardCharsets.UTF_8); String value = URLDecoder.decode(pair.length == 2 ? pair[1] : &quot;&quot;,StandardCharsets.UTF_8);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (map.putIfAbsent(key,value) != null) throw DomainException.validation(&quot;Параметр «&quot; + key + &quot;» повторюється.&quot;);</span>
+            }
+<span class="nc" id="L149">        } catch (IllegalArgumentException ex) { throw DomainException.validation(&quot;Некоректне кодування параметрів.&quot;); }</span>
+<span class="nc" id="L150">        Set&lt;String&gt; allowed = Set.of(&quot;query&quot;,&quot;city&quot;,&quot;minSalary&quot;,&quot;remote&quot;,&quot;status&quot;);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (!allowed.containsAll(map.keySet())) throw DomainException.validation(&quot;Невідомий параметр пошуку.&quot;);</span>
+<span class="nc" id="L152">        return map;</span>
+    }
+<span class="nc bnc" id="L154" title="All 2 branches missed.">    private void require(String actual, String... allowed) { if (!Arrays.asList(allowed).contains(actual)) throw new DomainException(405,&quot;METHOD_NOT_ALLOWED&quot;,&quot;Метод не підтримується.&quot;); }</span>
+    private int json(HttpExchange e, int status, Object object) throws IOException {
+<span class="nc" id="L156">        byte[] bytes = gson.toJson(object).getBytes(StandardCharsets.UTF_8); e.getResponseHeaders().set(&quot;Content-Type&quot;,&quot;application/json; charset=utf-8&quot;); e.sendResponseHeaders(status,bytes.length); e.getResponseBody().write(bytes); return status;</span>
+    }
+    private void resource(HttpExchange e, String name, String type) throws IOException {
+<span class="nc" id="L159">        try (var stream = JobPortalServer.class.getResourceAsStream(&quot;/&quot; + name)) {</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (stream == null) throw new IOException(&quot;Missing resource &quot; + name);</span>
+<span class="nc" id="L161">            byte[] bytes = stream.readAllBytes(); e.getResponseHeaders().set(&quot;Content-Type&quot;,type); e.sendResponseHeaders(200,bytes.length); e.getResponseBody().write(bytes);</span>
+        }
+<span class="nc" id="L163">    }</span>
+<span class="nc bnc" id="L164" title="All 4 branches missed.">    @Override public synchronized void close() { if (server != null) { server.stop(0); server = null; } if (executor != null) executor.shutdownNow(); repository.close(); }</span>
+    public static void main(String[] args) throws Exception {
+<span class="nc" id="L166">        int port = 18726; Path db = Path.of(&quot;data&quot;,&quot;jobs.sqlite&quot;); boolean seed = false;</span>
+<span class="nc bnc" id="L167" title="All 6 branches missed.">        for (int i=0;i&lt;args.length;i++) switch(args[i]) { case &quot;--port&quot; -&gt; port = Integer.parseInt(args[++i]); case &quot;--db&quot; -&gt; db = Path.of(args[++i]); case &quot;--seed&quot; -&gt; seed = true; default -&gt; throw new IllegalArgumentException(&quot;Usage: --port &lt;0..65535&gt; --db &lt;file&gt; --seed&quot;); }</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        JobPortalServer portal = new JobPortalServer(db); if (seed) portal.service.seedDemo(); portal.start(port);</span>
+<span class="nc" id="L169">        Runtime.getRuntime().addShutdownHook(new Thread(portal::close));</span>
+<span class="nc" id="L170">        System.out.println(&quot;JobPortal IPZ ready: &quot; + portal.baseUrl());</span>
+<span class="nc" id="L171">        System.out.println(&quot;SQLite: &quot; + db.toAbsolutePath().normalize());</span>
+<span class="nc" id="L172">        System.out.println(&quot;Only synthetic local data. Press Ctrl+C to stop.&quot;);</span>
+<span class="nc" id="L173">        new CountDownLatch(1).await();</span>
+<span class="nc" id="L174">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

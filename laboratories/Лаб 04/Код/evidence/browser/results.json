@@ -1,0 +1,57 @@
+[
+  {
+    "id": "UI01",
+    "name": "Load initial catalog",
+    "status": "PASS"
+  },
+  {
+    "id": "UI02",
+    "name": "Case insensitive search",
+    "status": "PASS"
+  },
+  {
+    "id": "UI03",
+    "name": "Combined filters and salary boundary",
+    "status": "PASS"
+  },
+  {
+    "id": "UI04",
+    "name": "Open and close details",
+    "status": "PASS"
+  },
+  {
+    "id": "UI05",
+    "name": "Reset filters",
+    "status": "PASS"
+  },
+  {
+    "id": "UI06",
+    "name": "Register seeker through form",
+    "status": "PASS"
+  },
+  {
+    "id": "UI07",
+    "name": "Login and role-specific panel",
+    "status": "PASS"
+  },
+  {
+    "id": "UI08",
+    "name": "Save resume",
+    "status": "PASS"
+  },
+  {
+    "id": "UI09",
+    "name": "Apply with resume",
+    "status": "PASS"
+  },
+  {
+    "id": "UI10",
+    "name": "Logout",
+    "status": "PASS"
+  },
+  {
+    "id": "SEC07",
+    "name": "Stored XSS rendered as text",
+    "status": "PASS"
+  }
+]

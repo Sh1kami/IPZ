@@ -1,0 +1,32 @@
+[
+  {
+    "users": 1,
+    "samples": 60,
+    "errors": 0,
+    "mean_ms": 49.32,
+    "p95_ms": 55,
+    "max_ms": 55,
+    "throughput_per_second": 20.04,
+    "passed": true
+  },
+  {
+    "users": 5,
+    "samples": 300,
+    "errors": 0,
+    "mean_ms": 48.14,
+    "p95_ms": 55,
+    "max_ms": 56,
+    "throughput_per_second": 83.01,
+    "passed": true
+  },
+  {
+    "users": 15,
+    "samples": 900,
+    "errors": 0,
+    "mean_ms": 47.85,
+    "p95_ms": 52,
+    "max_ms": 58,
+    "throughput_per_second": 242.98,
+    "passed": true
+  }
+]

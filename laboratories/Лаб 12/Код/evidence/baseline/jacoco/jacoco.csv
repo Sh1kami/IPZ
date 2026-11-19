@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Validation,15,122,9,27,1,20,6,19,0,7
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.Application,33,0,0,0,1,0,1,0,1,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.Job,0,33,0,0,0,1,0,1,0,1
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,JobPortalServer,1332,0,120,0,117,0,79,0,18,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.Role,15,0,0,0,1,0,1,0,1,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,JobFilter,0,204,0,44,0,23,0,25,0,3
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.User,18,0,0,0,1,0,1,0,1,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,PasswordHasher,13,127,0,10,2,18,0,11,0,6
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.Resume,18,0,0,0,1,0,1,0,1,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.JobStatus,0,15,0,0,0,1,0,1,0,1
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.Login,9,0,0,0,1,0,1,0,1,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,SQLiteRepository,873,0,28,0,88,0,41,0,27,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,DomainException,7,23,0,0,1,5,1,4,1,4
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,Models.StoredUser,9,0,0,0,1,0,1,0,1,0
+ІПЗ Якість і тестування програмного забезпечення,ua.edu.kntu.jobs,JobPortalService,424,0,24,0,40,0,34,0,22,0

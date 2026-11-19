@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Навчальний сервіс пошуку роботи</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+  <header><div class="container"><h1>Сервіс пошуку роботи</h1><p>Панчишкін Богдан Олександрович · 3ПРс/3</p></div></header>
+  <main class="container">
+    <div id="message" role="status" aria-live="polite" tabindex="-1"></div>
+    <section aria-labelledby="account-heading"><h2 id="account-heading">Обліковий запис</h2>
+      <div id="guest-panels" class="columns">
+        <form id="register-form"><h3>Реєстрація</h3>
+          <label for="register-name">Ім'я</label><input id="register-name" name="name" required minlength="2" maxlength="80" autocomplete="name">
+          <label for="register-email">Email</label><input id="register-email" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="seeker@example.test">
+          <label for="register-password">Пароль (8–128 символів)</label><input id="register-password" name="password" type="password" required minlength="8" maxlength="128" autocomplete="new-password">
+          <label for="register-role">Роль</label><select id="register-role" name="role"><option value="SEEKER">Шукач роботи</option><option value="EMPLOYER">Роботодавець</option></select>
+          <button id="register-submit" type="submit">Зареєструватися</button>
+        </form>
+        <form id="login-form"><h3>Вхід</h3>
+          <label for="login-email">Email</label><input id="login-email" name="email" type="email" required autocomplete="username">
+          <label for="login-password">Пароль</label><input id="login-password" name="password" type="password" required autocomplete="current-password">
+          <button id="login-submit" type="submit">Увійти</button>
+          <p class="hint">Реєстрація створює обліковий запис. Після неї увійдіть окремо. Вводьте лише навчальні дані.</p>
+        </form>
+      </div>
+      <div id="signed-in" hidden><p id="current-user"></p><button id="logout-button" type="button">Вийти</button></div>
+    </section>
+    <section id="resume-panel" aria-labelledby="resume-heading" hidden><h2 id="resume-heading">Моє резюме</h2>
+      <form id="resume-form">
+        <label for="resume-title">Назва резюме (5–120 символів)</label><input id="resume-title" name="title" required minlength="5" maxlength="120" placeholder="Junior Java Developer">
+        <label for="resume-text">Досвід і освіта (20–10000 символів)</label><textarea id="resume-text" name="text" required minlength="20" maxlength="10000" rows="5"></textarea>
+        <label for="resume-skills">Навички (до 1000 символів)</label><textarea id="resume-skills" name="skills" maxlength="1000" rows="2"></textarea>
+        <button id="resume-submit" type="submit">Зберегти резюме</button>
+      </form>
+    </section>
+    <section id="employer-panel" aria-labelledby="employer-heading" hidden><h2 id="employer-heading">Створити вакансію</h2>
+      <form id="job-form">
+        <div class="columns"><div><label for="job-title">Посада (5–120 символів)</label><input id="job-title" name="title" required minlength="5" maxlength="120">
+          <label for="job-company">Компанія</label><input id="job-company" name="company" required minlength="2" maxlength="120"></div>
+          <div><label for="job-city">Місто</label><input id="job-city" name="city" required minlength="2" maxlength="80">
+          <label for="job-salary">Зарплата, грн (1–1000000)</label><input id="job-salary" name="salary" type="number" min="1" max="1000000" step="1" required></div></div>
+        <label class="check"><input id="job-remote" name="remote" type="checkbox"> Віддалена робота</label>
+        <label for="job-description">Опис (20–10000 символів)</label><textarea id="job-description" name="description" rows="4" required minlength="20" maxlength="10000"></textarea>
+        <button id="job-submit" type="submit">Опублікувати вакансію</button>
+      </form>
+    </section>
+    <section aria-labelledby="jobs-heading"><h2 id="jobs-heading">Вакансії</h2>
+      <form id="search-form" class="filters">
+        <div><label for="search-query">Посада, компанія або опис</label><input id="search-query" name="query" maxlength="200" placeholder="Java"></div>
+        <div><label for="search-city">Місто (точний збіг)</label><input id="search-city" name="city" maxlength="80" placeholder="Київ"></div>
+        <div><label for="search-minsalary">Мінімальна зарплата, грн</label><input id="search-minsalary" name="minSalary" type="number" min="0" max="1000000" step="1"></div>
+        <div><label for="search-remote">Формат роботи</label><select id="search-remote" name="remote"><option value="">Будь-який</option><option value="true">Віддалено</option><option value="false">В офісі</option></select></div>
+        <div><label for="search-status">Стан вакансії</label><select id="search-status" name="status"><option value="ACTIVE">Відкрита</option><option value="CLOSED">Закрита</option><option value="ALL">Усі</option></select></div>
+        <div class="filter-actions"><button id="search-submit" type="submit">Знайти</button><button id="search-reset" type="button" class="secondary">Скинути</button></div>
+      </form>
+      <p id="job-count" role="status"></p><div id="jobs-list" class="job-grid"></div>
+    </section>
+    <section id="applications-panel" aria-labelledby="applications-heading" hidden><h2 id="applications-heading">Мої відгуки</h2><div id="applications-list"></div></section>
+  </main>
+  <dialog id="job-dialog" aria-labelledby="detail-title"><div class="dialog-top"><h2 id="detail-title"></h2><button id="detail-close" type="button" class="secondary" aria-label="Закрити деталі">Закрити</button></div><div id="detail-content"></div></dialog>
+  <dialog id="apply-dialog" aria-labelledby="apply-heading"><h2 id="apply-heading">Відгук на вакансію</h2><p id="apply-job-title"></p><p>До відгуку буде додано збережену копію вашого поточного резюме.</p><form id="apply-form"><label for="apply-letter">Супровідний лист (необов'язково, до 2000 символів)</label><textarea id="apply-letter" name="coverLetter" maxlength="2000" rows="4"></textarea><div class="buttons"><button id="apply-confirm" type="submit">Надіслати відгук</button><button id="apply-cancel" type="button" class="secondary">Скасувати</button></div></form><p id="apply-error" role="alert"></p></dialog>
+  <footer class="container"><p>Локальне навчальне середовище. Реальні вакансії та особисті дані тут не використовуються.</p></footer>
+</body></html>

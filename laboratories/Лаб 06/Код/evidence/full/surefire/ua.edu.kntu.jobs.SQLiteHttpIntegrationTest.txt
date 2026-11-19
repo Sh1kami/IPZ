@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: ua.edu.kntu.jobs.SQLiteHttpIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.57 s -- in ua.edu.kntu.jobs.SQLiteHttpIntegrationTest

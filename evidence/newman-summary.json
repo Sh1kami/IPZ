@@ -1,0 +1,98 @@
+{
+  "requests": {
+    "total": 12,
+    "pending": 0,
+    "failed": 0
+  },
+  "assertions": {
+    "total": 27,
+    "pending": 0,
+    "failed": 0
+  },
+  "executions": [
+    {
+      "name": "Health",
+      "method": "GET",
+      "status": 200,
+      "assertions": 3,
+      "passed": true
+    },
+    {
+      "name": "Catalog",
+      "method": "GET",
+      "status": 200,
+      "assertions": 3,
+      "passed": true
+    },
+    {
+      "name": "Anonymous profile",
+      "method": "GET",
+      "status": 401,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Register seeker",
+      "method": "POST",
+      "status": 201,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Login",
+      "method": "POST",
+      "status": 200,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Authenticated profile",
+      "method": "GET",
+      "status": 200,
+      "assertions": 3,
+      "passed": true
+    },
+    {
+      "name": "Missing resume",
+      "method": "GET",
+      "status": 404,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Save resume",
+      "method": "PUT",
+      "status": 200,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Apply",
+      "method": "POST",
+      "status": 201,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Duplicate application",
+      "method": "POST",
+      "status": 409,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Logout",
+      "method": "POST",
+      "status": 200,
+      "assertions": 2,
+      "passed": true
+    },
+    {
+      "name": "Session ended",
+      "method": "GET",
+      "status": 401,
+      "assertions": 2,
+      "passed": true
+    }
+  ]
+}

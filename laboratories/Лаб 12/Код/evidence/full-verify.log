@@ -1,0 +1,239 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< ua.edu.kntu:job-portal-ipz >---------------------
+[INFO] Building ІПЗ Якість і тестування програмного забезпечення 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ job-portal-ipz ---
+[INFO] Deleting /workspace/target
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ job-portal-ipz ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ job-portal-ipz ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 8 source files with javac [debug release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ job-portal-ipz ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ job-portal-ipz ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 9 source files with javac [debug release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.2:test (default-test) @ job-portal-ipz ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running ua.edu.kntu.jobs.JobFilterTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.285 s -- in ua.edu.kntu.jobs.JobFilterTest
+[INFO] Running ua.edu.kntu.jobs.JobPortalServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.807 s -- in ua.edu.kntu.jobs.JobPortalServiceTest
+[INFO] Running ua.edu.kntu.jobs.PasswordHasherTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.815 s -- in ua.edu.kntu.jobs.PasswordHasherTest
+[INFO] Running ua.edu.kntu.jobs.RegressionTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in ua.edu.kntu.jobs.RegressionTest
+[INFO] Running ua.edu.kntu.jobs.RunCucumberTest
+
+Scenario: Case insensitive search                              # src/test/resources/features/job_search.feature:4
+  Given the catalog contains the demo vacancies                # ua.edu.kntu.jobs.bdd.JobSteps.catalog()
+  When I search for "JAVA" in "Київ" with minimum salary 30000 # ua.edu.kntu.jobs.bdd.JobSteps.search(java.lang.String,java.lang.String,int)
+  Then I receive 2 vacancies                                   # ua.edu.kntu.jobs.bdd.JobSteps.count(int)
+
+Scenario: No matching vacancy                              # src/test/resources/features/job_search.feature:9
+  Given the catalog contains the demo vacancies            # ua.edu.kntu.jobs.bdd.JobSteps.catalog()
+  When I search for "Rust" in "Київ" with minimum salary 0 # ua.edu.kntu.jobs.bdd.JobSteps.search(java.lang.String,java.lang.String,int)
+  Then I receive 0 vacancies                               # ua.edu.kntu.jobs.bdd.JobSteps.count(int)
+
+Scenario: Salary boundary is inclusive                         # src/test/resources/features/job_search.feature:14
+  Given the catalog contains the demo vacancies                # ua.edu.kntu.jobs.bdd.JobSteps.catalog()
+  When I search for "Java" in "Київ" with minimum salary 40000 # ua.edu.kntu.jobs.bdd.JobSteps.search(java.lang.String,java.lang.String,int)
+  Then I receive 1 vacancies                                   # ua.edu.kntu.jobs.bdd.JobSteps.count(int)
+
+Scenario: Successful application                # src/test/resources/features/job_search.feature:19
+  Given a registered seeker with a saved resume # ua.edu.kntu.jobs.bdd.JobSteps.seeker()
+  And an active vacancy                         # ua.edu.kntu.jobs.bdd.JobSteps.active()
+  When the seeker applies once                  # ua.edu.kntu.jobs.bdd.JobSteps.once()
+  Then there is exactly 1 application           # ua.edu.kntu.jobs.bdd.JobSteps.applications(int)
+
+Scenario: Repeated application is rejected                # src/test/resources/features/job_search.feature:25
+  Given a registered seeker with a saved resume           # ua.edu.kntu.jobs.bdd.JobSteps.seeker()
+  And an active vacancy                                   # ua.edu.kntu.jobs.bdd.JobSteps.active()
+  When the seeker applies twice                           # ua.edu.kntu.jobs.bdd.JobSteps.twice()
+  Then the second application is rejected with status 409 # ua.edu.kntu.jobs.bdd.JobSteps.secondError(int)
+  And there is exactly 1 application                      # ua.edu.kntu.jobs.bdd.JobSteps.applications(int)
+
+Scenario: Closed vacancy is unavailable            # src/test/resources/features/job_search.feature:32
+  Given a registered seeker with a saved resume    # ua.edu.kntu.jobs.bdd.JobSteps.seeker()
+  And a closed vacancy                             # ua.edu.kntu.jobs.bdd.JobSteps.closed()
+  When the seeker applies once                     # ua.edu.kntu.jobs.bdd.JobSteps.once()
+  Then the application is rejected with status 409 # ua.edu.kntu.jobs.bdd.JobSteps.firstError(int)
+  And there is exactly 0 application               # ua.edu.kntu.jobs.bdd.JobSteps.applications(int)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.962 s -- in ua.edu.kntu.jobs.RunCucumberTest
+[INFO] Running ua.edu.kntu.jobs.SQLiteHttpIntegrationTest
+2026-11-19T13:04:31.752892704Z POST /api/auth/register -> 201
+2026-11-19T13:04:31.902870847Z POST /api/auth/login -> 200
+2026-11-19T13:04:32.079733479Z POST /api/auth/register -> 201
+2026-11-19T13:04:32.266668587Z POST /api/auth/login -> 200
+2026-11-19T13:04:32.447475780Z POST /api/auth/register -> 201
+2026-11-19T13:04:32.630706239Z POST /api/auth/login -> 200
+2026-11-19T13:04:32.693158322Z POST /api/jobs -> 201
+2026-11-19T13:04:32.739398677Z POST /api/jobs -> 401
+2026-11-19T13:04:32.784301237Z POST /api/jobs -> 403
+2026-11-19T13:04:32.831974879Z PUT /api/me/resume -> 403
+2026-11-19T13:04:32.877058119Z POST /api/jobs/1/applications -> 403
+2026-11-19T13:04:32.929008656Z PATCH /api/jobs/1 -> 403
+2026-11-19T13:04:32.976759053Z GET /api/jobs/1 -> 200
+2026-11-19T13:04:33.023946262Z GET /api/jobs -> 200
+2026-11-19T13:04:33.276765599Z POST /api/auth/register -> 201
+2026-11-19T13:04:33.400910048Z POST /api/auth/login -> 200
+2026-11-19T13:04:33.571307016Z POST /api/auth/register -> 201
+2026-11-19T13:04:33.740666999Z POST /api/auth/login -> 200
+2026-11-19T13:04:33.908527262Z POST /api/auth/register -> 201
+2026-11-19T13:04:34.088453070Z POST /api/auth/login -> 200
+2026-11-19T13:04:34.149462139Z POST /api/jobs -> 201
+2026-11-19T13:04:34.210245133Z PUT /api/me/resume -> 200
+2026-11-19T13:04:34.269062022Z POST /api/jobs/1/applications -> 201
+2026-11-19T13:04:34.332436259Z PUT /api/me/resume -> 200
+2026-11-19T13:04:34.381170053Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:34.433405692Z GET /api/me/applications -> 200
+2026-11-19T13:04:34.485499928Z GET /api/me/applications -> 200
+2026-11-19T13:04:34.727526818Z POST /api/auth/register -> 201
+2026-11-19T13:04:34.851025429Z POST /api/auth/login -> 200
+2026-11-19T13:04:35.022102913Z POST /api/auth/register -> 201
+2026-11-19T13:04:35.191160836Z POST /api/auth/login -> 200
+2026-11-19T13:04:35.255208490Z POST /api/jobs -> 201
+2026-11-19T13:04:35.313981119Z PUT /api/me/resume -> 200
+2026-11-19T13:04:35.376018954Z POST /api/jobs/1/applications -> 201
+2026-11-19T13:04:35.423142323Z GET /api/me -> 200
+2026-11-19T13:04:35.427056085Z GET /api/jobs/1 -> 200
+2026-11-19T13:04:35.472570246Z GET /api/me/resume -> 200
+2026-11-19T13:04:35.520664518Z GET /api/me/applications -> 200
+2026-11-19T13:04:35.766097072Z POST /api/auth/register -> 201
+2026-11-19T13:04:35.890598059Z POST /api/auth/login -> 200
+2026-11-19T13:04:35.937359835Z POST /api/jobs -> 400
+2026-11-19T13:04:35.988501236Z POST /api/jobs -> 400
+2026-11-19T13:04:36.036522544Z POST /api/jobs -> 400
+2026-11-19T13:04:36.087091548Z POST /api/jobs -> 400
+2026-11-19T13:04:36.133009156Z POST /api/jobs -> 400
+2026-11-19T13:04:36.179510210Z POST /api/jobs -> 415
+2026-11-19T13:04:36.224805454Z POST /api/jobs -> 413
+2026-11-19T13:04:36.271742351Z GET /api/jobs -> 200
+2026-11-19T13:04:36.517928402Z POST /api/auth/register -> 201
+2026-11-19T13:04:36.640533184Z POST /api/auth/login -> 200
+2026-11-19T13:04:36.812362212Z POST /api/auth/register -> 201
+2026-11-19T13:04:36.981182880Z POST /api/auth/login -> 200
+2026-11-19T13:04:37.028759979Z GET /api/me/resume -> 404
+2026-11-19T13:04:37.094125992Z PUT /api/me/resume -> 200
+2026-11-19T13:04:37.152362999Z PUT /api/me/resume -> 200
+2026-11-19T13:04:37.211410208Z PUT /api/me/resume -> 200
+2026-11-19T13:04:37.255877604Z GET /api/me/resume -> 200
+2026-11-19T13:04:37.304133071Z GET /api/me/resume -> 200
+2026-11-19T13:04:37.546098716Z POST /api/auth/register -> 201
+2026-11-19T13:04:37.660351436Z POST /api/auth/register -> 409
+2026-11-19T13:04:37.707197853Z GET /api/me -> 401
+2026-11-19T13:04:37.872193729Z POST /api/auth/login -> 200
+2026-11-19T13:04:37.919282491Z GET /api/me -> 200
+2026-11-19T13:04:38.157235346Z POST /api/auth/register -> 201
+2026-11-19T13:04:38.283820473Z POST /api/auth/login -> 200
+2026-11-19T13:04:38.448888774Z POST /api/auth/register -> 201
+2026-11-19T13:04:38.613636513Z POST /api/auth/login -> 200
+2026-11-19T13:04:38.679007594Z POST /api/jobs -> 201
+2026-11-19T13:04:38.736749613Z PUT /api/me/resume -> 200
+2026-11-19T13:04:38.798852857Z POST /api/jobs/1/applications -> 201
+2026-11-19T13:04:38.806755248Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:38.843785794Z GET /api/me/applications -> 200
+2026-11-19T13:04:39.108333555Z POST /api/auth/register -> 201
+2026-11-19T13:04:39.233121920Z POST /api/auth/login -> 200
+2026-11-19T13:04:39.289815639Z POST /api/jobs -> 201
+2026-11-19T13:04:39.335565340Z GET /api/jobs/1 -> 200
+2026-11-19T13:04:39.391783800Z PATCH /api/jobs/1 -> 200
+2026-11-19T13:04:39.439624854Z GET /api/jobs -> 200
+2026-11-19T13:04:39.487927375Z GET /api/jobs -> 200
+2026-11-19T13:04:39.582073595Z GET /api/jobs/0 -> 400
+2026-11-19T13:04:39.584735582Z GET /api/jobs/-1 -> 400
+2026-11-19T13:04:39.632415696Z GET /api/jobs/abc -> 400
+2026-11-19T13:04:39.679563705Z GET /api/jobs/9223372036854775808 -> 400
+2026-11-19T13:04:39.724393967Z GET /api/jobs/999999 -> 404
+2026-11-19T13:04:39.774697431Z GET /api/unknown -> 404
+2026-11-19T13:04:39.824112758Z DELETE /api/jobs -> 405
+2026-11-19T13:04:39.867670293Z GET /api/jobs -> 400
+2026-11-19T13:04:39.911317329Z GET /api/jobs -> 400
+2026-11-19T13:04:39.954637729Z GET /api/jobs -> 400
+2026-11-19T13:04:40.002648696Z GET /api/jobs -> 400
+2026-11-19T13:04:40.047518607Z GET /api/jobs -> 400
+2026-11-19T13:04:40.090469718Z GET /api/jobs -> 400
+2026-11-19T13:04:40.138550775Z GET /api/jobs -> 400
+2026-11-19T13:04:40.367661892Z POST /api/auth/register -> 201
+2026-11-19T13:04:40.495327048Z POST /api/auth/login -> 200
+2026-11-19T13:04:40.651583316Z POST /api/auth/login -> 401
+2026-11-19T13:04:40.801612364Z POST /api/auth/login -> 401
+2026-11-19T13:04:40.861950297Z POST /api/auth/logout -> 200
+2026-11-19T13:04:40.906975839Z GET /api/me -> 401
+2026-11-19T13:04:41.125368566Z POST /api/auth/register -> 201
+2026-11-19T13:04:41.242316994Z POST /api/auth/login -> 200
+2026-11-19T13:04:41.402890970Z POST /api/auth/register -> 201
+2026-11-19T13:04:41.569104031Z POST /api/auth/login -> 200
+2026-11-19T13:04:41.625249403Z POST /api/jobs -> 201
+2026-11-19T13:04:41.672158404Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:41.729682687Z PUT /api/me/resume -> 200
+2026-11-19T13:04:41.777368922Z POST /api/jobs/1/applications -> 400
+2026-11-19T13:04:41.834683002Z PATCH /api/jobs/1 -> 200
+2026-11-19T13:04:41.881082216Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:41.928068461Z POST /api/jobs/999999/applications -> 404
+2026-11-19T13:04:41.972105087Z GET /api/me/applications -> 200
+2026-11-19T13:04:42.071820760Z POST /api/auth/register -> 403
+2026-11-19T13:04:42.189682481Z POST /api/auth/register -> 201
+2026-11-19T13:04:42.448667395Z GET /api/jobs -> 200
+2026-11-19T13:04:42.452615925Z GET /api/jobs -> 200
+2026-11-19T13:04:42.499533672Z GET /api/jobs -> 200
+2026-11-19T13:04:42.544708081Z GET /api/jobs -> 200
+2026-11-19T13:04:42.593130066Z GET /api/jobs -> 200
+2026-11-19T13:04:42.639427813Z GET /api/jobs -> 200
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.57 s -- in ua.edu.kntu.jobs.SQLiteHttpIntegrationTest
+[INFO] Running ua.edu.kntu.jobs.StartupTest
+2026-11-19T13:04:42.740749914Z GET /api/health -> 200
+2026-11-19T13:04:42.745088785Z GET /api/jobs -> 200
+2026-11-19T13:04:42.799224032Z GET / -> 200
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in ua.edu.kntu.jobs.StartupTest
+[INFO] Running ua.edu.kntu.jobs.ValidationTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in ua.edu.kntu.jobs.ValidationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 67, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ job-portal-ipz ---
+[INFO] Building jar: /workspace/target/job-portal-ipz-1.0.0.jar
+[INFO] 
+[INFO] --- shade:3.6.1:shade (default) @ job-portal-ipz ---
+[WARNING] error_prone_annotations-2.41.0.jar, gson-2.13.2.jar, job-portal-ipz-1.0.0.jar, slf4j-api-2.0.17.jar, slf4j-nop-2.0.17.jar, sqlite-jdbc-3.53.4.0.jar define 1 overlapping resource: 
+[WARNING]   - META-INF/MANIFEST.MF
+[WARNING] error_prone_annotations-2.41.0.jar, gson-2.13.2.jar, slf4j-api-2.0.17.jar, slf4j-nop-2.0.17.jar, sqlite-jdbc-3.53.4.0.jar define 1 overlapping classes: 
+[WARNING]   - META-INF.versions.9.module-info
+[WARNING] slf4j-api-2.0.17.jar, slf4j-nop-2.0.17.jar define 1 overlapping resource: 
+[WARNING]   - META-INF/LICENSE.txt
+[WARNING] maven-shade-plugin has detected that some files are
+[WARNING] present in two or more JARs. When this happens, only one
+[WARNING] single version of the file is copied to the uber jar.
+[WARNING] Usually this is not harmful and you can skip these warnings,
+[WARNING] otherwise try to manually exclude artifacts based on
+[WARNING] mvn dependency:tree -Ddetail=true and the above output.
+[WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
+[INFO] Replacing original artifact with shaded artifact.
+[INFO] 
+[INFO] --- jacoco:0.8.15:report (coverage-report) @ job-portal-ipz ---
+[INFO] Loading execution data file /workspace/target/jacoco.exec
+[INFO] Analyzed bundle 'ІПЗ Якість і тестування програмного забезпечення' with 15 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  36.734 s
+[INFO] Finished at: 2026-11-19T13:04:47Z
+[INFO] ------------------------------------------------------------------------
+
+EXIT_CODE=0

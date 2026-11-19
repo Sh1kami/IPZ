@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="11.573" tests="13" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/workspace/target/test-classes:/workspace/target/classes:/root/.m2/repository/org/xerial/sqlite-jdbc/3.53.4.0/sqlite-jdbc-3.53.4.0.jar:/root/.m2/repository/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar:/root/.m2/repository/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar:/root/.m2/repository/org/slf4j/slf4j-nop/2.0.17/slf4j-nop-2.0.17.jar:/root/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:/root/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/root/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.15/org.jacoco.agent-0.8.15-runtime.jar:/root/.m2/repository/io/cucumber/cucumber-java/7.20.1/cucumber-java-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-core/7.20.1/cucumber-core-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-gherkin/7.20.1/cucumber-gherkin-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-gherkin-messages/7.20.1/cucumber-gherkin-messages-7.20.1.jar:/root/.m2/repository/io/cucumber/gherkin/28.0.0/gherkin-28.0.0.jar:/root/.m2/repository/io/cucumber/messages/24.1.0/messages-24.1.0.jar:/root/.m2/repository/io/cucumber/testng-xml-formatter/0.2.0/testng-xml-formatter-0.2.0.jar:/root/.m2/repository/io/cucumber/query/12.2.0/query-12.2.0.jar:/root/.m2/repository/io/cucumber/tag-expressions/6.1.0/tag-expressions-6.1.0.jar:/root/.m2/repository/io/cucumber/cucumber-expressions/17.1.0/cucumber-expressions-17.1.0.jar:/root/.m2/repository/io/cucumber/datatable/7.20.1/datatable-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-plugin/7.20.1/cucumber-plugin-7.20.1.jar:/root/.m2/repository/io/cucumber/docstring/7.20.1/docstring-7.20.1.jar:/root/.m2/repository/io/cucumber/html-formatter/21.7.0/html-formatter-21.7.0.jar:/root/.m2/repository/io/cucumber/junit-xml-formatter/0.5.0/junit-xml-formatter-0.5.0.jar:/root/.m2/repository/io/cucumber/ci-environment/10.0.1/ci-environment-10.0.1.jar:/root/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/root/.m2/repository/io/cucumber/cucumber-junit/7.20.1/cucumber-junit-7.20.1.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/opt/java/openjdk/lib"/>
+    <property name="sun.java.command" value="/workspace/target/surefire/surefirebooter-20261119130417368_3.jar /workspace/target/surefire 2026-11-19T13-04-17_156-jvmRun1 surefire-20261119130417368_1tmp surefire_0-20261119130417368_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/workspace/target/test-classes:/workspace/target/classes:/root/.m2/repository/org/xerial/sqlite-jdbc/3.53.4.0/sqlite-jdbc-3.53.4.0.jar:/root/.m2/repository/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar:/root/.m2/repository/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar:/root/.m2/repository/org/slf4j/slf4j-nop/2.0.17/slf4j-nop-2.0.17.jar:/root/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:/root/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/root/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.15/org.jacoco.agent-0.8.15-runtime.jar:/root/.m2/repository/io/cucumber/cucumber-java/7.20.1/cucumber-java-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-core/7.20.1/cucumber-core-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-gherkin/7.20.1/cucumber-gherkin-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-gherkin-messages/7.20.1/cucumber-gherkin-messages-7.20.1.jar:/root/.m2/repository/io/cucumber/gherkin/28.0.0/gherkin-28.0.0.jar:/root/.m2/repository/io/cucumber/messages/24.1.0/messages-24.1.0.jar:/root/.m2/repository/io/cucumber/testng-xml-formatter/0.2.0/testng-xml-formatter-0.2.0.jar:/root/.m2/repository/io/cucumber/query/12.2.0/query-12.2.0.jar:/root/.m2/repository/io/cucumber/tag-expressions/6.1.0/tag-expressions-6.1.0.jar:/root/.m2/repository/io/cucumber/cucumber-expressions/17.1.0/cucumber-expressions-17.1.0.jar:/root/.m2/repository/io/cucumber/datatable/7.20.1/datatable-7.20.1.jar:/root/.m2/repository/io/cucumber/cucumber-plugin/7.20.1/cucumber-plugin-7.20.1.jar:/root/.m2/repository/io/cucumber/docstring/7.20.1/docstring-7.20.1.jar:/root/.m2/repository/io/cucumber/html-formatter/21.7.0/html-formatter-21.7.0.jar:/root/.m2/repository/io/cucumber/junit-xml-formatter/0.5.0/junit-xml-formatter-0.5.0.jar:/root/.m2/repository/io/cucumber/ci-environment/10.0.1/ci-environment-10.0.1.jar:/root/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/root/.m2/repository/io/cucumber/cucumber-junit/7.20.1/cucumber-junit-7.20.1.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/root"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-08-18"/>
+    <property name="java.home" value="/opt/java/openjdk"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/workspace"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="surefire.real.class.path" value="/workspace/target/surefire/surefirebooter-20261119130417368_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="17.0.20.1+1"/>
+    <property name="user.name" value="root"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.18.58.1-microsoft-standard-WSL2"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-17.0.20.1+1"/>
+    <property name="localRepository" value="/root/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="17.0.20.1"/>
+    <property name="user.dir" value="/workspace"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="17.0.20.1+1"/>
+    <property name="java.specification.maintenance.version" value="1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="61.0"/>
+  </properties>
+  <testcase name="ownershipAndRoleMatrixPreserveDatabase" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="1.957">
+    <system-out><![CDATA[2026-11-19T13:04:31.752892704Z POST /api/auth/register -> 201
+2026-11-19T13:04:31.902870847Z POST /api/auth/login -> 200
+2026-11-19T13:04:32.079733479Z POST /api/auth/register -> 201
+2026-11-19T13:04:32.266668587Z POST /api/auth/login -> 200
+2026-11-19T13:04:32.447475780Z POST /api/auth/register -> 201
+2026-11-19T13:04:32.630706239Z POST /api/auth/login -> 200
+2026-11-19T13:04:32.693158322Z POST /api/jobs -> 201
+2026-11-19T13:04:32.739398677Z POST /api/jobs -> 401
+2026-11-19T13:04:32.784301237Z POST /api/jobs -> 403
+2026-11-19T13:04:32.831974879Z PUT /api/me/resume -> 403
+2026-11-19T13:04:32.877058119Z POST /api/jobs/1/applications -> 403
+2026-11-19T13:04:32.929008656Z PATCH /api/jobs/1 -> 403
+2026-11-19T13:04:32.976759053Z GET /api/jobs/1 -> 200
+2026-11-19T13:04:33.023946262Z GET /api/jobs -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="validApplicationSnapshotDuplicateAndPrivateList" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="1.462">
+    <system-out><![CDATA[2026-11-19T13:04:33.276765599Z POST /api/auth/register -> 201
+2026-11-19T13:04:33.400910048Z POST /api/auth/login -> 200
+2026-11-19T13:04:33.571307016Z POST /api/auth/register -> 201
+2026-11-19T13:04:33.740666999Z POST /api/auth/login -> 200
+2026-11-19T13:04:33.908527262Z POST /api/auth/register -> 201
+2026-11-19T13:04:34.088453070Z POST /api/auth/login -> 200
+2026-11-19T13:04:34.149462139Z POST /api/jobs -> 201
+2026-11-19T13:04:34.210245133Z PUT /api/me/resume -> 200
+2026-11-19T13:04:34.269062022Z POST /api/jobs/1/applications -> 201
+2026-11-19T13:04:34.332436259Z PUT /api/me/resume -> 200
+2026-11-19T13:04:34.381170053Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:34.433405692Z GET /api/me/applications -> 200
+2026-11-19T13:04:34.485499928Z GET /api/me/applications -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="restartingHttpWithSameDatabasePreservesSessionAndEntities" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="1.037">
+    <system-out><![CDATA[2026-11-19T13:04:34.727526818Z POST /api/auth/register -> 201
+2026-11-19T13:04:34.851025429Z POST /api/auth/login -> 200
+2026-11-19T13:04:35.022102913Z POST /api/auth/register -> 201
+2026-11-19T13:04:35.191160836Z POST /api/auth/login -> 200
+2026-11-19T13:04:35.255208490Z POST /api/jobs -> 201
+2026-11-19T13:04:35.313981119Z PUT /api/me/resume -> 200
+2026-11-19T13:04:35.376018954Z POST /api/jobs/1/applications -> 201
+2026-11-19T13:04:35.423142323Z GET /api/me -> 200
+2026-11-19T13:04:35.427056085Z GET /api/jobs/1 -> 200
+2026-11-19T13:04:35.472570246Z GET /api/me/resume -> 200
+2026-11-19T13:04:35.520664518Z GET /api/me/applications -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="strictJsonTypesBodyLimitAndMediaTypeAreRejectedWithoutInsert" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.748">
+    <system-out><![CDATA[2026-11-19T13:04:35.766097072Z POST /api/auth/register -> 201
+2026-11-19T13:04:35.890598059Z POST /api/auth/login -> 200
+2026-11-19T13:04:35.937359835Z POST /api/jobs -> 400
+2026-11-19T13:04:35.988501236Z POST /api/jobs -> 400
+2026-11-19T13:04:36.036522544Z POST /api/jobs -> 400
+2026-11-19T13:04:36.087091548Z POST /api/jobs -> 400
+2026-11-19T13:04:36.133009156Z POST /api/jobs -> 400
+2026-11-19T13:04:36.179510210Z POST /api/jobs -> 415
+2026-11-19T13:04:36.224805454Z POST /api/jobs -> 413
+2026-11-19T13:04:36.271742351Z GET /api/jobs -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="resumeUpsertIsOnlyForOwnSeekerAndDefaultSkillsIsEmpty" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="1.035">
+    <system-out><![CDATA[2026-11-19T13:04:36.517928402Z POST /api/auth/register -> 201
+2026-11-19T13:04:36.640533184Z POST /api/auth/login -> 200
+2026-11-19T13:04:36.812362212Z POST /api/auth/register -> 201
+2026-11-19T13:04:36.981182880Z POST /api/auth/login -> 200
+2026-11-19T13:04:37.028759979Z GET /api/me/resume -> 404
+2026-11-19T13:04:37.094125992Z PUT /api/me/resume -> 200
+2026-11-19T13:04:37.152362999Z PUT /api/me/resume -> 200
+2026-11-19T13:04:37.211410208Z PUT /api/me/resume -> 200
+2026-11-19T13:04:37.255877604Z GET /api/me/resume -> 200
+2026-11-19T13:04:37.304133071Z GET /api/me/resume -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="registrationNormalizesDuplicateAndDoesNotAuthenticate" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.613">
+    <system-out><![CDATA[2026-11-19T13:04:37.546098716Z POST /api/auth/register -> 201
+2026-11-19T13:04:37.660351436Z POST /api/auth/register -> 409
+2026-11-19T13:04:37.707197853Z GET /api/me -> 401
+2026-11-19T13:04:37.872193729Z POST /api/auth/login -> 200
+2026-11-19T13:04:37.919282491Z GET /api/me -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="parallelHttpDuplicateApplicationYieldsOneCreatedAndOneConflict" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.927">
+    <system-out><![CDATA[2026-11-19T13:04:38.157235346Z POST /api/auth/register -> 201
+2026-11-19T13:04:38.283820473Z POST /api/auth/login -> 200
+2026-11-19T13:04:38.448888774Z POST /api/auth/register -> 201
+2026-11-19T13:04:38.613636513Z POST /api/auth/login -> 200
+2026-11-19T13:04:38.679007594Z POST /api/jobs -> 201
+2026-11-19T13:04:38.736749613Z PUT /api/me/resume -> 200
+2026-11-19T13:04:38.798852857Z POST /api/jobs/1/applications -> 201
+2026-11-19T13:04:38.806755248Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:38.843785794Z GET /api/me/applications -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="createdJobDetailsAndStatusChangePreserveFieldsAndIgnoreSpoofedOwner" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.64">
+    <system-out><![CDATA[2026-11-19T13:04:39.108333555Z POST /api/auth/register -> 201
+2026-11-19T13:04:39.233121920Z POST /api/auth/login -> 200
+2026-11-19T13:04:39.289815639Z POST /api/jobs -> 201
+2026-11-19T13:04:39.335565340Z GET /api/jobs/1 -> 200
+2026-11-19T13:04:39.391783800Z PATCH /api/jobs/1 -> 200
+2026-11-19T13:04:39.439624854Z GET /api/jobs -> 200
+2026-11-19T13:04:39.487927375Z GET /api/jobs -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="routesMethodsIdsAndMalformedFiltersHaveStableErrors" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.653">
+    <system-out><![CDATA[2026-11-19T13:04:39.582073595Z GET /api/jobs/0 -> 400
+2026-11-19T13:04:39.584735582Z GET /api/jobs/-1 -> 400
+2026-11-19T13:04:39.632415696Z GET /api/jobs/abc -> 400
+2026-11-19T13:04:39.679563705Z GET /api/jobs/9223372036854775808 -> 400
+2026-11-19T13:04:39.724393967Z GET /api/jobs/999999 -> 404
+2026-11-19T13:04:39.774697431Z GET /api/unknown -> 404
+2026-11-19T13:04:39.824112758Z DELETE /api/jobs -> 405
+2026-11-19T13:04:39.867670293Z GET /api/jobs -> 400
+2026-11-19T13:04:39.911317329Z GET /api/jobs -> 400
+2026-11-19T13:04:39.954637729Z GET /api/jobs -> 400
+2026-11-19T13:04:40.002648696Z GET /api/jobs -> 400
+2026-11-19T13:04:40.047518607Z GET /api/jobs -> 400
+2026-11-19T13:04:40.090469718Z GET /api/jobs -> 400
+2026-11-19T13:04:40.138550775Z GET /api/jobs -> 400
+]]></system-out>
+  </testcase>
+  <testcase name="actualLoginCookieDigestLogoutAndGenericWrongCredentials" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.768">
+    <system-out><![CDATA[2026-11-19T13:04:40.367661892Z POST /api/auth/register -> 201
+2026-11-19T13:04:40.495327048Z POST /api/auth/login -> 200
+2026-11-19T13:04:40.651583316Z POST /api/auth/login -> 401
+2026-11-19T13:04:40.801612364Z POST /api/auth/login -> 401
+2026-11-19T13:04:40.861950297Z POST /api/auth/logout -> 200
+2026-11-19T13:04:40.906975839Z GET /api/me -> 401
+]]></system-out>
+  </testcase>
+  <testcase name="applicationPreconditionsAndInvalidLetterProduceNoRows" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="1.068">
+    <system-out><![CDATA[2026-11-19T13:04:41.125368566Z POST /api/auth/register -> 201
+2026-11-19T13:04:41.242316994Z POST /api/auth/login -> 200
+2026-11-19T13:04:41.402890970Z POST /api/auth/register -> 201
+2026-11-19T13:04:41.569104031Z POST /api/auth/login -> 200
+2026-11-19T13:04:41.625249403Z POST /api/jobs -> 201
+2026-11-19T13:04:41.672158404Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:41.729682687Z PUT /api/me/resume -> 200
+2026-11-19T13:04:41.777368922Z POST /api/jobs/1/applications -> 400
+2026-11-19T13:04:41.834683002Z PATCH /api/jobs/1 -> 200
+2026-11-19T13:04:41.881082216Z POST /api/jobs/1/applications -> 409
+2026-11-19T13:04:41.928068461Z POST /api/jobs/999999/applications -> 404
+2026-11-19T13:04:41.972105087Z GET /api/me/applications -> 200
+]]></system-out>
+  </testcase>
+  <testcase name="originUsesActualDynamicPortAndHeadersArePresent" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.215">
+    <system-out><![CDATA[2026-11-19T13:04:42.071820760Z POST /api/auth/register -> 403
+2026-11-19T13:04:42.189682481Z POST /api/auth/register -> 201
+]]></system-out>
+  </testcase>
+  <testcase name="unicodeSearchAndCombinedFiltersHaveExactSeedOracle" classname="ua.edu.kntu.jobs.SQLiteHttpIntegrationTest" time="0.449">
+    <system-out><![CDATA[2026-11-19T13:04:42.448667395Z GET /api/jobs -> 200
+2026-11-19T13:04:42.452615925Z GET /api/jobs -> 200
+2026-11-19T13:04:42.499533672Z GET /api/jobs -> 200
+2026-11-19T13:04:42.544708081Z GET /api/jobs -> 200
+2026-11-19T13:04:42.593130066Z GET /api/jobs -> 200
+2026-11-19T13:04:42.639427813Z GET /api/jobs -> 200
+]]></system-out>
+  </testcase>
+</testsuite>

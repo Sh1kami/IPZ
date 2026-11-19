@@ -1,0 +1,14 @@
+START Running Jmeter on Thu Nov 19 14:09:10 CET 2026
+JVM_ARGS=-Xmn2506m -Xms10024m -Xmx10024m
+jmeter args=-n -t /workspace/load/catalog.jmx -Jusers=15 -Jloops=20 -l /workspace/evidence/load/users-15.jtl -j /workspace/evidence/load/users-15.log -e -o /workspace/evidence/load/html-15
+jmeter ALL ARGS=-Dlog4j2.formatMsgNoLookups=true -n -t /workspace/load/catalog.jmx -Jusers=15 -Jloops=20 -l /workspace/evidence/load/users-15.jtl -j /workspace/evidence/load/users-15.log -e -o /workspace/evidence/load/html-15
+Creating summariser <summary>
+Created the tree successfully using /workspace/load/catalog.jmx
+Starting standalone test @ November 19, 2026 2:09:12 PM CET (1795093752250)
+Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
+summary =    900 in 00:00:04 =  231.8/s Avg:    47 Min:     1 Max:    58 Err:     0 (0.00%)
+Tidying up ...    @ November 19, 2026 2:09:16 PM CET (1795093756384)
+... end of run
+END Running Jmeter on Thu Nov 19 14:09:18 CET 2026
+Nov 19, 2026 2:09:11 PM java.util.prefs.FileSystemPreferences$1 run
+INFO: Created user preferences directory.

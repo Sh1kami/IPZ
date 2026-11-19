@@ -1,0 +1,440 @@
+{
+  "count": 67,
+  "passed": 67,
+  "tests": [
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "wildcardAndSqlLikeCharactersAreLiteralSubstrings",
+      "seconds": 0.039,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "queryAndCityLimitsCountCodePointsAfterTrim",
+      "seconds": 0.019,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "matchingDoesNotDependOnTheProcessDefaultLocale",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "defaultFilterSelectsActiveJobsOfBothWorkModes",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "everyFilterCombinesWithAndAndTheSalaryThresholdIsInclusive",
+      "seconds": 0.002,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "minimumSalaryZeroAndMaximumAreAllowed",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "querySearchesTitleCompanyAndDescriptionButNotCity",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "trueAndFalseRemoteFiltersAreDifferentFromAnOmittedFilter",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "allStatusIncludesBothAndClosedStatusExcludesActive",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "queryAndCityMatchCyrillicWithRootLocaleNormalization",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobFilterTest",
+      "name": "malformedSalaryRemoteAndStatusUseStableValidationErrors",
+      "seconds": 0.001,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "applicationSnapshotDuplicateAndPrivacyArePersisted",
+      "seconds": 1.738,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "invalidResumeOrSalaryDoesNotReplaceValidState",
+      "seconds": 0.395,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "normalizedEmailIsUniqueAndRejectedInsertLeavesUsersUnchanged",
+      "seconds": 0.556,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "rolesCannotCrossResumeJobOrApplicationBoundaries",
+      "seconds": 0.319,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "resumeUpsertAndOwnUserIsolation",
+      "seconds": 0.739,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "simultaneousDuplicateApplicationCreatesExactlyOneRow",
+      "seconds": 0.381,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "reopeningSameDatabasePreservesAllEntitiesAndOtherFileIsEmpty",
+      "seconds": 0.423,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "jobStatusOnlyChangesForOwnerAndHiddenFromDefaultCatalog",
+      "seconds": 0.448,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "applicationPreconditionsDoNotInsertRows",
+      "seconds": 0.357,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "wrongAndUnknownCredentialsHaveSameErrorAndNoSession",
+      "seconds": 0.523,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "fourVacancySeedIsIdempotentAndFiltersHaveIndependentOracle",
+      "seconds": 0.356,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.JobPortalServiceTest",
+      "name": "loginExpiryAtExactlyEightHoursAndLogoutInvalidateTokens",
+      "seconds": 0.569,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "malformedOrUnsupportedStoredHashesReturnFalseWithoutThrowing",
+      "seconds": 0.002,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "wellFormedHashWithOneChangedKeyBitDoesNotAuthenticate",
+      "seconds": 0.109,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "tokensHaveThirtyTwoRandomBytesAndAreSafeForCookies",
+      "seconds": 0.004,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "verificationPreservesPasswordWhitespaceCaseAndUnicode",
+      "seconds": 0.313,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "storedKeyReallyUsesContractAlgorithmIterationsAndBitLength",
+      "seconds": 0.121,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "tokenDigestMatchesKnownSha256VectorAndIsDeterministic",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.PasswordHasherTest",
+      "name": "samePasswordHasDifferentRandomSaltsAndKeysButBothVerify",
+      "seconds": 0.209,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.RegressionTest",
+      "name": "salaryAboveBoundary",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.RegressionTest",
+      "name": "caseInsensitiveSearch",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.RegressionTest",
+      "name": "cityCaseInsensitive",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.RegressionTest",
+      "name": "salaryLowerBoundary",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.RegressionTest",
+      "name": "remoteMismatch",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.RegressionTest",
+      "name": "combinedFilters",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "Job search and application",
+      "name": "Case insensitive search",
+      "seconds": 0.549,
+      "status": "PASS"
+    },
+    {
+      "class": "Job search and application",
+      "name": "No matching vacancy",
+      "seconds": 0.25,
+      "status": "PASS"
+    },
+    {
+      "class": "Job search and application",
+      "name": "Salary boundary is inclusive",
+      "seconds": 0.229,
+      "status": "PASS"
+    },
+    {
+      "class": "Job search and application",
+      "name": "Successful application",
+      "seconds": 0.356,
+      "status": "PASS"
+    },
+    {
+      "class": "Job search and application",
+      "name": "Repeated application is rejected",
+      "seconds": 0.348,
+      "status": "PASS"
+    },
+    {
+      "class": "Job search and application",
+      "name": "Closed vacancy is unavailable",
+      "seconds": 0.334,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "ownershipAndRoleMatrixPreserveDatabase",
+      "seconds": 1.957,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "validApplicationSnapshotDuplicateAndPrivateList",
+      "seconds": 1.462,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "restartingHttpWithSameDatabasePreservesSessionAndEntities",
+      "seconds": 1.037,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "strictJsonTypesBodyLimitAndMediaTypeAreRejectedWithoutInsert",
+      "seconds": 0.748,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "resumeUpsertIsOnlyForOwnSeekerAndDefaultSkillsIsEmpty",
+      "seconds": 1.035,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "registrationNormalizesDuplicateAndDoesNotAuthenticate",
+      "seconds": 0.613,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "parallelHttpDuplicateApplicationYieldsOneCreatedAndOneConflict",
+      "seconds": 0.927,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "createdJobDetailsAndStatusChangePreserveFieldsAndIgnoreSpoofedOwner",
+      "seconds": 0.64,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "routesMethodsIdsAndMalformedFiltersHaveStableErrors",
+      "seconds": 0.653,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "actualLoginCookieDigestLogoutAndGenericWrongCredentials",
+      "seconds": 0.768,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "applicationPreconditionsAndInvalidLetterProduceNoRows",
+      "seconds": 1.068,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "originUsesActualDynamicPortAndHeadersArePresent",
+      "seconds": 0.215,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.SQLiteHttpIntegrationTest",
+      "name": "unicodeSearchAndCombinedFiltersHaveExactSeedOracle",
+      "seconds": 0.449,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.StartupTest",
+      "name": "realServerStartsOnDynamicPortAndServesHealthAndEmptyCatalog",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "malformedOrNonPositiveIdUsesTheValidationError",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "requiredTextRejectsNullAndTrimmedBlank",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "emailTrimsAndUsesRootLocaleEvenWhenDefaultLocaleIsTurkish",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "salaryAcceptsBothInclusiveBoundsAndRejectsOutsideValues",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "emailRejectsAddressesOutsideTheExplicitContractPattern",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "passwordCountsUnicodeCodePointsAndPreservesWhitespace",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "printableInputRemainsLiteralRatherThanBecomingExecutableMarkup",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "textBoundsCountUnicodeCodePointsAfterTrim",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "idAcceptsPositiveIntegersIncludingTheStorageLimit",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "emailAcceptsContractPatternAndExactLengthLimit",
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    {
+      "class": "ua.edu.kntu.jobs.ValidationTest",
+      "name": "passwordAsciiBoundsAreInclusiveAndMissingPasswordIsInvalid",
+      "seconds": 0.0,
+      "status": "PASS"
+    }
+  ],
+  "coverage": {
+    "INSTRUCTION": {
+      "covered": 2933,
+      "missed": 357,
+      "percent": 89.15
+    },
+    "BRANCH": {
+      "covered": 209,
+      "missed": 53,
+      "percent": 79.77
+    },
+    "LINE": {
+      "covered": 294,
+      "missed": 29,
+      "percent": 91.02
+    },
+    "COMPLEXITY": {
+      "covered": 177,
+      "missed": 51,
+      "percent": 77.63
+    },
+    "METHOD": {
+      "covered": 92,
+      "missed": 4,
+      "percent": 95.83
+    },
+    "CLASS": {
+      "covered": 15,
+      "missed": 0,
+      "percent": 100.0
+    }
+  }
+}
